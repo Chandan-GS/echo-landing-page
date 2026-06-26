@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echo — Your Notifications, Summarized</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0c0c0c;
+            --surface: #161616;
+            --surface2: #1e1e1e;
+            --green: #4caf6a;
+            --green-dim: #2d6b42;
+            --green-glow: rgba(76, 175, 106, 0.18);
+            --text: #f0f0f0;
+            --muted: #7a7a7a;
+            --border: rgba(255, 255, 255, 0.07);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 48px;
+            background: linear-gradient(to bottom, rgba(12, 12, 12, 0.95) 0%, transparent 100%);
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-content {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo-img {
+            margin-top: 10px;
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo span {
+            color: var(--green);
+        }
+
+        .nav-cta {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 10px 24px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-cta:hover {
+            background: var(--text);
+            color: var(--bg);
+            transform: translateY(-1px);
+        }
+
+        /* ── BUTTONS ── */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--green);
+            color: #000;
+            border: none;
+            border-radius: 100px;
+            padding: 18px 40px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 8px 24px rgba(76, 175, 106, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(76, 175, 106, 0.35);
+            opacity: 0.95;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 24px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(76, 175, 106, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .notif-ticker {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .notif-pill {
+            position: absolute;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 14px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--muted);
+            white-space: nowrap;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        .notif-pill .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-280px);
+            }
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 16px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--green);
+            margin-bottom: 28px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.7);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            max-width: 900px;
+            margin: 0 auto 12px;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--green);
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--muted);
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 520px;
+            margin: 16px auto 48px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-note {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        /* ── PHONES SHOWCASE ── */
+        .showcase {
+            padding: 60px 24px 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .phones-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .phone-wrap {
+            position: relative;
+            flex-shrink: 0;
+            transition: transform 0.6s cubic-bezier(.22, 1, .36, 1), opacity 0.6s ease;
+            margin: 0 -15px;
+            /* Overlap effect */
+        }
+
+        /* Initial state before fade-in (slanting and shifted down) */
+        .phone-wrap.fade-in {
+            opacity: 0;
+        }
+
+        .phone-wrap.fade-in:nth-child(1) {
+            transform: rotate(-15deg) translateY(80px);
+        }
+
+        .phone-wrap.fade-in:nth-child(2) {
+            transform: rotate(5deg) translateY(60px);
+        }
+
+        .phone-wrap.fade-in:nth-child(3) {
+            transform: rotate(12deg) translateY(70px);
+        }
+
+        /* Final state when visible */
+        .phone-wrap.fade-in.visible {
+            opacity: 1;
+        }
+
+        .phone-wrap.fade-in.visible:nth-child(1) {
+            transform: rotate(-6deg) translateY(30px);
+            z-index: 1;
+        }
+
+        .phone-wrap.fade-in.visible:nth-child(2) {
+            transform: rotate(0deg) translateY(0px);
+            z-index: 3;
+        }
+
+        .phone-wrap.fade-in.visible:nth-child(3) {
+            transform: rotate(4deg) translateY(20px);
+            z-index: 2;
+        }
+
+        /* Hover state with responsive lift and interactive slanting */
+
+        .phone-wrap.fade-in.visible:nth-child(1):hover {
+            transform: rotate(-8deg) translateY(-25px) scale(1.08);
+        }
+
+        .phone-wrap.fade-in.visible:nth-child(2):hover {
+            transform: rotate(3deg) translateY(-30px) scale(1.1);
+        }
+
+        .phone-wrap.fade-in.visible:nth-child(3):hover {
+            transform: rotate(8deg) translateY(-25px) scale(1.08);
+        }
+
+        .phone-wrap.fade-in.visible:hover .phone-frame {
+            box-shadow:
+                0 60px 120px rgba(0, 0, 0, 0.95),
+                0 0 50px rgba(76, 175, 106, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(76, 175, 106, 0.45);
+        }
+
+        .phone-frame {
+            width: 210px;
+            border-radius: 38px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                0 40px 80px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            background: #111;
+            transition: border-color 0.4s cubic-bezier(.22, 1, .36, 1), box-shadow 0.4s cubic-bezier(.22, 1, .36, 1);
+        }
+
+        .phone-frame img {
+            width: 100%;
+            display: block;
+        }
+
+        .phone-wrap:nth-child(2) .phone-frame {
+            width: 240px;
+            border-color: rgba(76, 175, 106, 0.3);
+            box-shadow:
+                0 50px 100px rgba(0, 0, 0, 0.8),
+                0 0 60px rgba(76, 175, 106, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* ── STAT BAND ── */
+        .stat-band {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 60px 24px;
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--green);
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        /* ── FEATURES ── */
+        .features {
+            padding: 100px 24px 120px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 16px;
+        }
+
+        .section-h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.65;
+            max-width: 500px;
+            margin: 0 auto 56px;
+        }
+
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .feat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .feat-card:hover {
+            border-color: rgba(76, 175, 106, 0.25);
+            transform: translateY(-4px);
+        }
+
+        .feat-card.wide {
+            grid-column: span 2;
+        }
+
+        .feat-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--green-glow);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--green);
+        }
+
+        .feat-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .feat-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .feat-card p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+
+        .vault-mini {
+            margin-top: 24px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .vault-tag {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .vault-tag.green {
+            background: rgba(76, 175, 106, 0.12);
+            border-color: rgba(76, 175, 106, 0.2);
+            color: var(--green);
+        }
+
+        .briefing-preview {
+            margin-top: 24px;
+            background: var(--surface2);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .bp-time {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .bp-countdown {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .bp-label {
+            font-size: 0.85rem;
+            color: var(--green);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── AI TOGGLE SECTION ── */
+        .ai-toggle-section {
+            padding: 80px 24px 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .ai-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 720px;
+            width: 100%;
+        }
+
+        .ai-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: left;
+            position: relative;
+            transition: border-color 0.2s, transform 0.2s;
+            cursor: default;
+        }
+
+        .ai-card:hover {
+            border-color: rgba(76, 175, 106, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .ai-card.active {
+            border-color: var(--green);
+            background: linear-gradient(135deg, #161616 0%, #1a2620 100%);
+        }
+
+        .ai-card.active::after {
+            content: 'Recommended';
+            position: absolute;
+            top: -1px;
+            right: 20px;
+            background: var(--green);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 0 0 8px 8px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .ai-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: var(--green);
+        }
+
+        .ai-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .ai-icon.cloud {
+            background: rgba(76, 175, 106, 0.12);
+        }
+
+        .ai-icon.edge {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .ai-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .ai-card p {
+            color: var(--muted);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .ai-pill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ai-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        .ai-pill::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: var(--green);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── SCREENSHOT GRID ── */
+        .screenshots {
+            padding: 80px 24px 120px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .screenshots-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .ss-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            align-items: end;
+        }
+
+        .ss-item {
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+
+        .ss-item:hover {
+            transform: scale(1.03);
+        }
+
+        .ss-item img {
+            width: 100%;
+            display: block;
+        }
+
+        .ss-item:nth-child(2) {
+            margin-top: -30px;
+        }
+
+        .ss-item:nth-child(4) {
+            margin-top: -20px;
+        }
+
+        .ss-caption {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .ss-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* ── CTA SECTION ── */
+        .cta-section {
+            padding: 120px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(76, 175, 106, 0.09) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            max-width: 720px;
+            margin: 0 auto 20px;
+        }
+
+        .cta-section h2 em {
+            font-style: italic;
+            color: var(--green);
+        }
+
+        .cta-section p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 440px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 48px;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .footer-logo-img {
+            margin-top: 10px;
+            height: 55px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .footer-logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .footer-logo-text span {
+            color: var(--green);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+        }
+
+        .footer-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        .footer-copy {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        /* ── WAVEFORM ANIM ── */
+        .wave-bars {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 28px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            border-radius: 2px;
+            background: var(--green);
+            animation: wave 1.2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                height: 4px;
+            }
+
+            50% {
+                height: 20px;
+            }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .feat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .feat-card.wide {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 20px;
+            }
+
+            .ai-cards,
+            .feat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feat-card.wide {
+                grid-column: span 1;
+            }
+
+            .ss-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .ss-item:nth-child(2),
+            .ss-item:nth-child(4) {
+                margin-top: 0;
+            }
+
+            .stat-band {
+                gap: 40px;
+                padding: 40px 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .phone-frame {
+                width: 160px !important;
+            }
+
+            .phone-wrap:nth-child(2) .phone-frame {
+                width: 185px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 120px 20px 60px;
+            }
+
+            .phone-frame {
+                width: 130px !important;
+            }
+
+            .phone-wrap:nth-child(2) .phone-frame {
+                width: 150px !important;
+            }
+
+            .btn-primary {
+                width: 100%;
+                padding: 16px 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .notif-pill,
+            .wave-bar,
+            .hero::before {
+                animation: none;
+            }
+
+            * {
+                transition: none !important;
+            }
+        }
+
+        /* scroll fade-in */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── MODAL POPUP ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 540px;
+            padding: 36px;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(76, 175, 106, 0.1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-title svg {
+            color: var(--green);
+        }
+
+        .modal-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .modal-step {
+            display: flex;
+            gap: 16px;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            background: var(--green-glow);
+            border: 1px solid rgba(76, 175, 106, 0.3);
+            color: var(--green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .step-content p {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .step-content strong {
+            color: var(--text);
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-modal-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--green);
+            color: #000;
+            border: none;
+            border-radius: 100px;
+            padding: 16px 32px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 8px 24px rgba(76, 175, 106, 0.2);
+            width: 100%;
+        }
+
+        .btn-modal-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(76, 175, 106, 0.35);
+            opacity: 0.95;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-content">
+            <a href="#" class="nav-logo-container">
+                <img src="logo.png" alt="Echo Logo" class="nav-logo-img" onerror="this.style.display='none'">
+                <div class="nav-logo">Echo</div>
+            </a>
+            <button class="nav-cta" onclick="openDownloadModal()">
+                Download
+            </button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="notif-ticker" id="ticker"></div>
+
+        <div class="hero-content">
+            <!-- <div class="hero-eyebrow fade-in">Background AI · Always Listening</div> -->
+            <h1 class="fade-in">Your day,<br /><em>summarized</em></h1>
+            <p class="hero-sub fade-in">
+                Echo silently captures every notification while you live your life.
+                Then delivers it back as a crisp morning briefing.
+            </p>
+
+            <div class="hero-actions fade-in" id="download">
+                <a href="javascript:void(0)" onclick="openDownloadModal()" class="btn-primary">Download Echo</a>
+                <p class="hero-note">Available for Android · No account required</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="showcase">
+        <div class="phones-row">
+            <div class="phone-wrap fade-in" style="transition-delay: 0.1s;">
+                <div class="phone-frame">
+                    <img src="ai.jpeg" alt="Ask Echo Interface"
+                        onerror="this.src='https://via.placeholder.com/210x450/111/4caf6a?text=Ask+Echo'" />
+                </div>
+            </div>
+            <div class="phone-wrap fade-in" style="transition-delay: 0.2s;">
+                <div class="phone-frame">
+                    <img src="home.jpeg" alt="Echo Dashboard"
+                        onerror="this.src='https://via.placeholder.com/240x510/111/4caf6a?text=Home'" />
+                </div>
+            </div>
+            <div class="phone-wrap fade-in" style="transition-delay: 0.3s;">
+                <div class="phone-frame">
+                    <img src="brief.jpeg" alt="Morning Briefing Transcript"
+                        onerror="this.src='https://via.placeholder.com/210x450/111/4caf6a?text=Briefing'" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="stat-band fade-in">
+        <div class="stat-item">
+            <div class="stat-num">100+</div>
+            <div class="stat-label">Notifications captured daily</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">2 min</div>
+            <div class="stat-label">Morning briefing, not hours of scrolling</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Interruptions while you focus</div>
+        </div>
+    </div>
+
+    <section class="features" id="features">
+        <div class="features-header fade-in">
+            <!-- <div class="section-label">What Echo does</div> -->
+            <h2 class="section-h2">A smarter relationship<br />with your phone</h2>
+            <p class="section-desc">Built to respect your attention. Echo works entirely in the background.</p>
+        </div>
+
+        <div class="feat-grid">
+
+            <div class="feat-card fade-in">
+                <div class="feat-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </div>
+                <h3>Scheduled Briefings</h3>
+                <p>Set once. Echo delivers a crisp audio summary every morning at exactly the time you choose, whether
+                    you open the app or not.</p>
+                <div class="briefing-preview">
+                    <div class="bp-time">Next Briefing in</div>
+                    <div class="bp-countdown">07:00 AM</div>
+                    <div class="bp-label">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                        </svg> Play Today's Briefing
+                    </div>
+                </div>
+            </div>
+
+            <div class="feat-card fade-in">
+                <div class="feat-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </div>
+                <h3>Ask Echo Anything</h3>
+                <p>Chat with your notifications. "Any meetings tonight?" "Did anyone message me about the deadline?"
+                    Echo knows — and answers.</p>
+                <div style="margin-top:24px; display:flex; gap:8px; align-items:center;">
+                    <div class="wave-bars">
+                        <div class="wave-bar" style="animation-delay:0s"></div>
+                        <div class="wave-bar" style="animation-delay:0.1s"></div>
+                        <div class="wave-bar" style="animation-delay:0.2s"></div>
+                        <div class="wave-bar" style="animation-delay:0.3s"></div>
+                        <div class="wave-bar" style="animation-delay:0.4s"></div>
+                        <div class="wave-bar" style="animation-delay:0.5s"></div>
+                        <div class="wave-bar" style="animation-delay:0.15s"></div>
+                        <div class="wave-bar" style="animation-delay:0.35s"></div>
+                    </div>
+                    <span style="font-size:0.85rem; color:var(--muted); margin-left:4px;">Ask Echo…</span>
+                </div>
+            </div>
+
+            <div class="feat-card wide fade-in">
+                <div class="feat-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="3" y1="15" x2="21" y2="15"></line>
+                    </svg>
+                </div>
+                <h3>The Vault — Everything, Organized</h3>
+                <p>Every notification is logged and searchable. Browse by app, category, or time. Nothing slips through.
+                </p>
+                <div class="vault-mini">
+                    <span class="vault-tag green">Google</span>
+                    <span class="vault-tag green">WhatsApp</span>
+                    <span class="vault-tag">Gmail</span>
+                    <span class="vault-tag">Calendar</span>
+                    <span class="vault-tag">Slack</span>
+                    <span class="vault-tag green">Twitter</span>
+                    <span class="vault-tag">YouTube</span>
+                    <span class="vault-tag">LinkedIn</span>
+                    <span class="vault-tag green">+89 more today</span>
+                </div>
+            </div>
+
+            <div class="feat-card fade-in">
+                <div class="feat-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" viewBox="0 0 24 24">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                </div>
+                <h3>Silent by Design</h3>
+                <p>Echo captures in the background even when the app is closed. Your screen stays clear; your focus
+                    stays intact.</p>
+            </div>
+
+            <div class="feat-card fade-in">
+                <div class="feat-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                </div>
+                <h3>Block & Rename</h3>
+                <p>Tell Echo to ignore noisy apps or rename them to something meaningful. Your vault, your rules.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="ai-toggle-section" id="ai">
+        <!-- <div class="section-label fade-in">Your AI, Your Choice</div> -->
+        <h2 class="section-h2 fade-in">Cloud smart or<br /><em>offline private</em></h2>
+        <p class="section-desc fade-in">Echo lets you choose how your notifications are processed. Switch anytime — no
+            data lock-in.</p>
+
+        <div class="ai-cards fade-in">
+            <div class="ai-card active">
+                <div class="ai-icon cloud">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                    </svg>
+                </div>
+                <h3>Cloud AI</h3>
+                <p>Powered by frontier models. Richer summaries, smarter Q&A, and deeper contextual awareness.</p>
+                <div class="ai-pill-list">
+                    <div class="ai-pill">More nuanced, conversational answers</div>
+                    <div class="ai-pill">Handles complex multi-app context</div>
+                    <div class="ai-pill">Continuously improving models</div>
+                    <div class="ai-pill">Requires internet for processing</div>
+                </div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-icon edge">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" viewBox="0 0 24 24">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                </div>
+                <h3>On-Device AI</h3>
+                <p>Runs entirely on your phone. No data leaves your device. Fast, private, and works offline.</p>
+                <div class="ai-pill-list">
+                    <div class="ai-pill">100% private — nothing uploaded</div>
+                    <div class="ai-pill">Works without internet</div>
+                    <div class="ai-pill">Runs on the device's neural chip</div>
+                    <div class="ai-pill">Optimized for battery life</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="screenshots" id="screenshots">
+        <div class="screenshots-header fade-in">
+            <div class="section-label">In the wild</div>
+            <h2 class="section-h2">Designed for the<br />way you actually live</h2>
+        </div>
+
+        <div class="ss-grid">
+            <div class="ss-col">
+                <div class="ss-item">
+                    <img src="settings.jpeg" alt="Settings Interface"
+                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
+                </div>
+            </div>
+            <div class="ss-col">
+                <div class="ss-item">
+                    <img src="home.jpeg" alt="Echo Dashboard"
+                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
+                </div>
+            </div>
+            <div class="ss-col">
+                <div class="ss-item">
+                    <img src="ai.jpeg" alt="Morning Briefing Transcript"
+                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
+                </div>
+            </div>
+            <div class="ss-col">
+                <div class="ss-item">
+                    <img src="vault_sec.jpeg" alt="The Vault Notifications"
+                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2 class="fade-in">Stop scrolling.<br />Start <em>listening</em>.</h2>
+        <p class="fade-in">Download Echo and let it handle the noise while you handle what matters.</p>
+        <div class="hero-actions fade-in" style="margin-top: 32px;">
+            <a href="javascript:void(0)" onclick="openDownloadModal()" class="btn-primary">Download Echo</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <a href="#" class="footer-logo-container">
+                <img src="logo.png" alt="Echo Logo" class="footer-logo-img" onerror="this.style.display='none'">
+                <div class="footer-logo-text">Echo</div>
+            </a>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Support</a>
+            </div>
+            <p class="footer-copy">© 2026 Echo. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ── DOWNLOAD MODAL ── -->
+    <div class="modal-overlay" id="downloadModal" onclick="closeDownloadModalOnOverlay(event)">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeDownloadModal()">×</button>
+            <div class="modal-title">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                Installing Echo
+            </div>
+            <div class="modal-steps">
+                <div class="modal-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Download & Play Protect</h4>
+                        <p>When you download the file, Android may show a <strong>'Play Protect'</strong> warning. Tap
+                            <strong>'More details'</strong> and then <strong>'Install anyway'</strong> OR Go to play
+                            store -> profile -> play protect -> settings -> turn off.
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Enable Restricted Settings</h4>
+                        <p>After installation, open the app. If your phone blocks the Notification Access permission, go
+                            to <strong>Settings > Apps > Echo</strong>, tap the three-dot menu (<strong>⋮</strong>) in
+                            the top right, and select <strong>'Allow restricted settings'</strong>.</p>
+                    </div>
+                </div>
+                <div class="modal-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Complete Setup</h4>
+                        <p>Return to the app to enable the final permissions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <a href="https://drive.google.com/drive/folders/16ARlmi1jQfeSJIzxgc9KR_qaepR7KMLA?usp=sharing"
+                    target="_blank" class="btn-modal-primary" onclick="closeDownloadModal()">
+                    Proceed to Download
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Floating notification pills ──
+        const notifs = [
+            "WhatsApp · 3 new messages",
+            "Gmail · Invoice received",
+            "Calendar · Meeting at 3 PM",
+            "Slack · @mentioned in #design",
+            "Google · 27° Bengaluru",
+            "Twitter · 12 new likes",
+            "YouTube · New video from channel",
+            "LinkedIn · 5 connection requests",
+            "Amazon · Your order shipped",
+            "Spotify · New release Friday",
+            "HCLTech · Pre-placement talk",
+            "AICTE · Activity points alert",
+        ];
+
+        const ticker = document.getElementById('ticker');
+
+        function spawnPill() {
+            if (!ticker) return;
+            const pill = document.createElement('div');
+            pill.className = 'notif-pill';
+            pill.innerHTML = `<span class="dot"></span>${notifs[Math.floor(Math.random() * notifs.length)]}`;
+
+            const x = 8 + Math.random() * 84;
+            const duration = 5 + Math.random() * 5;
+            const delay = Math.random() * 2;
+            const startY = 55 + Math.random() * 35;
+
+            pill.style.left = x + '%';
+            pill.style.top = startY + '%';
+            pill.style.animationDuration = duration + 's';
+            pill.style.animationDelay = delay + 's';
+
+            ticker.appendChild(pill);
+            setTimeout(() => pill.remove(), (duration + delay + 1) * 1000);
+        }
+
+        // Spawn a batch on landing and stop shortly after
+        let spawnCount = 0;
+        const maxSpawns = 12;
+        for (let i = 0; i < 6; i++) spawnPill();
+        const intervalId = setInterval(() => {
+            spawnPill();
+            spawnCount++;
+            if (spawnCount >= maxSpawns) {
+                clearInterval(intervalId);
+            }
+        }, 1400);
+
+        // ── Download Modal Controls ──
+        function openDownloadModal() {
+            const modal = document.getElementById('downloadModal');
+            if (modal) modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDownloadModal() {
+            const modal = document.getElementById('downloadModal');
+            if (modal) modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeDownloadModalOnOverlay(event) {
+            if (event.target.id === 'downloadModal') {
+                closeDownloadModal();
+            }
+        }
+
+        // ── Scroll fade-in ──
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+
+</html>
