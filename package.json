@@ -1,0 +1,26 @@
+{
+  "name": "echo-landing-page",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Marketing landing page and privacy policy for Echo, a privacy-first personal briefing app.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.5.6",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.49",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.7.3"
+  }
+}
