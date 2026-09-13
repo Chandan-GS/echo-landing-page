@@ -1,45 +1,58 @@
-import Link from 'next/link';
-import { HeroMascot } from './Mascot';
-import GooglePlayButton from './GooglePlayButton';
-import { ShieldIcon, CheckCircleIcon, PhoneIcon } from './icons';
+import Image from 'next/image';
+import Mascot from './Mascot';
+import Reveal from './Reveal';
+import PlayBadge from './PlayBadge';
+import { CheckIcon } from './icons';
 
 export default function Hero() {
   return (
     <section className="hero">
-      <div className="hero-bg" aria-hidden="true" />
-      <div className="wrap">
-        <HeroMascot />
+      <div className="hero-glow" aria-hidden="true" />
 
-        <h1>
-          Wake up to a briefing <em>made just for you.</em>
-        </h1>
-        <p className="lede">
-          Echo quietly gathers your notifications, messages and calendar through the day, then hands
-          you a calm, spoken summary each morning — so you start the day informed without touching
-          your phone.
-        </p>
+      <div className="wrap hero-inner">
+        <div className="hero-copy">
+          <Reveal as="span" className="eyebrow">
+            Your private morning briefing
+          </Reveal>
+          <Reveal as="h1">
+            Wake up <em>already caught up.</em>
+          </Reveal>
+          <Reveal as="p" className="hero-sub">
+            Echo captures your notifications, messages and calendar all day — then reads you one calm,
+            spoken briefing every morning. No scrolling. Nothing missed.
+          </Reveal>
 
-        <div className="cta-row" id="get">
-          <GooglePlayButton />
-          <a className="btn btn-ghost" href="#briefing">
-            See how it works
-          </a>
+          <Reveal className="hero-cta">
+            <PlayBadge height={54} />
+            <a className="btn btn-ghost" href="#how">
+              See how it works
+            </a>
+          </Reveal>
+
+          <Reveal className="hero-trust">
+            <span>
+              <CheckIcon className="material-icon" /> Private by default
+            </span>
+            <span>
+              <CheckIcon className="material-icon" /> Runs on your device
+            </span>
+            <span>
+              <CheckIcon className="material-icon" /> No account · Free
+            </span>
+          </Reveal>
         </div>
-        <p className="fine">
-          Free to start · No account required · Works fully offline. By installing you agree to our{' '}
-          <Link href="/privacy/">Privacy Policy</Link>.
-        </p>
 
-        <div className="trust-row">
-          <span>
-            <ShieldIcon /> Private by default
-          </span>
-          <span>
-            <CheckCircleIcon /> No ads, no tracking
-          </span>
-          <span>
-            <PhoneIcon /> Runs on your device
-          </span>
+        <div className="hero-visual">
+          <Mascot />
+          <Reveal className="hero-phone" as="div">
+            <Image
+              src="/home.jpeg"
+              alt="Echo Home on a dark screen: a serif 'Good evening, Chandan' greeting, '101 notifications captured today', a live 'Next Briefing in 10:02:54 at 7:00 AM' countdown, and a 'Play Today's Briefing' card."
+              width={720}
+              height={1560}
+              priority
+            />
+          </Reveal>
         </div>
       </div>
     </section>

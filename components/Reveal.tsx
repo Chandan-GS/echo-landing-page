@@ -1,33 +1,39 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode, type ElementType } from 'react';
+import { useEffect, useRef, type ReactNode, type ElementType, type CSSProperties } from 'react';
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
   as?: ElementType;
+  style?: CSSProperties;
+  id?: string;
 };
 
 /**
- * Progressive-enhancement scroll reveal. Elements start hidden (`.reveal`) and
- * fade up when scrolled into view. Honors prefers-reduced-motion and degrades
- * gracefully when IntersectionObserver is unavailable.
+ * Scroll-triggered reveal: adds `.visible` when the element scrolls into view.
+ * Elements start as `.fade-in` (hidden, offset) and animate in once. Honors
+ * prefers-reduced-motion (CSS forces them visible with no transition). A small
+ * rootMargin reveals slightly before the element fully enters, and elements
+ * already in view on mount are revealed immediately.
  */
-export default function Reveal({ children, className = '', as: Tag = 'div' }: RevealProps) {
+export default function Reveal({ children, className = '', as: Tag = 'div', style, id }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!('IntersectionObserver' in window)) {
+      el.classList.add('visible');
+      return;
+    }
 
-    if (reduce || !('IntersectionObserver' in window)) {
-      el.classList.add('in');
-      el.style.opacity = '1';
+    // Reveal immediately if the element is already at/above the viewport on mount
+    // (e.g. above-the-fold content, or restored scroll position).
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) {
+      el.classList.add('visible');
       return;
     }
 
@@ -35,12 +41,12 @@ export default function Reveal({ children, className = '', as: Tag = 'div' }: Re
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('in');
+            entry.target.classList.add('visible');
             io.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
     );
 
     io.observe(el);
@@ -48,7 +54,7 @@ export default function Reveal({ children, className = '', as: Tag = 'div' }: Re
   }, []);
 
   return (
-    <Tag ref={ref} className={`reveal ${className}`.trim()}>
+    <Tag ref={ref} id={id} className={`fade-in ${className}`.trim()} style={style}>
       {children}
     </Tag>
   );

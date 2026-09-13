@@ -1,44 +1,45 @@
-import { Fragment } from 'react';
 import Reveal from './Reveal';
+import { NotificationsIcon, GraphicEqIcon, ScheduleIcon } from './icons';
 
 const steps = [
   {
-    n: '01 — CAPTURES',
-    title: 'It listens',
-    body: 'Notifications, SMS and calendar events are collected quietly, all day.',
+    n: 'Step 01',
+    icon: <NotificationsIcon className="material-icon" />,
+    title: 'Echo listens, quietly',
+    body: 'In the background, Echo captures your notifications, texts and calendar events all day — even when the app is closed. Nothing to open, nothing to check.',
   },
   {
-    n: '02 — SYNTHESIZES',
-    title: 'It understands',
-    body: 'AI sorts the noise from the signal and writes a short, human summary.',
+    n: 'Step 02',
+    icon: <GraphicEqIcon className="material-icon" />,
+    title: 'It sorts signal from noise',
+    body: "On-device AI reads everything, drops the junk, and writes a short, human summary of what actually happened and what's coming up.",
   },
   {
-    n: '03 — SPEAKS',
-    title: 'It briefs you',
-    body: 'At the time you pick, Echo reads your day aloud in a voice you chose.',
+    n: 'Step 03',
+    icon: <ScheduleIcon className="material-icon" />,
+    title: 'You wake up briefed',
+    body: 'At the time you pick — 7 AM, say — Echo reads your day aloud in the voice you chose. Two minutes, and you are caught up.',
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section className="how">
+    <section className="section" id="how">
       <div className="wrap">
-        <Reveal className="how-card">
-          {steps.map((step, i) => (
-            <Fragment key={step.n}>
-              <div className="how-step">
-                <div className="n">{step.n}</div>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </div>
-              {i < steps.length - 1 && (
-                <div className="how-arrow" aria-hidden="true">
-                  →
-                </div>
-              )}
-            </Fragment>
-          ))}
+        <Reveal className="section-head center">
+          <span className="eyebrow">How it works</span>
+          <h2 className="section-h2">Set it once. It runs every day.</h2>
         </Reveal>
+        <div className="steps">
+          {steps.map((s) => (
+            <Reveal className="step" key={s.n}>
+              <div className="step-n">{s.n}</div>
+              <div className="step-icon">{s.icon}</div>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );

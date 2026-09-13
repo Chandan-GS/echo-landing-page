@@ -9,38 +9,32 @@ type FeatureRowProps = {
   body: ReactNode;
   points: string[];
   image: { src: string; alt: string };
-  /** Reverse layout: text on the right, phone on the left. */
-  reversed?: boolean;
+  reverse?: boolean;
 };
 
-export default function FeatureRow({
-  eyebrow,
-  title,
-  body,
-  points,
-  image,
-  reversed = false,
-}: FeatureRowProps) {
+export default function FeatureRow({ eyebrow, title, body, points, image, reverse }: FeatureRowProps) {
   return (
-    <div className={`feature ${reversed ? 'rev' : ''}`.trim()}>
-      <Reveal className="f-text">
+    <div className={`frow ${reverse ? 'reverse' : ''}`.trim()}>
+      <Reveal className="frow-copy">
         <span className="eyebrow">{eyebrow}</span>
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         <p>{body}</p>
-        <ul className="f-list">
-          {points.map((point) => (
-            <li key={point}>
+        <ul className="frow-list">
+          {points.map((p) => (
+            <li key={p}>
               <span className="tick">
-                <CheckIcon />
-              </span>{' '}
-              {point}
+                <CheckIcon className="material-icon" />
+              </span>
+              {p}
             </li>
           ))}
         </ul>
       </Reveal>
-      <Reveal className="device glow">
-        <div className="frame">
-          <Image src={image.src} alt={image.alt} width={720} height={1560} />
+      <Reveal className="frow-media">
+        <div className="device glow">
+          <div className="device-frame">
+            <Image src={image.src} alt={image.alt} width={720} height={1560} />
+          </div>
         </div>
       </Reveal>
     </div>
