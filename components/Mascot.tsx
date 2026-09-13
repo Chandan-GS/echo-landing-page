@@ -73,13 +73,6 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
         opacity={phase === 'speaking' ? 1 : phase === 'listening' ? 0.85 : 0.7}
       />
 
-      {/* faint sonar ripple rings — the whole set tightens/expands per phase */}
-      <g className="m-rings" fill="none" stroke="#8FE0A6" strokeWidth="1.6">
-        <circle className="ring-a" cx="120" cy="120" r="72" opacity="0.22" />
-        <circle className="ring-b" cx="120" cy="120" r="72" opacity="0.22" />
-        <circle className="ring-c" cx="120" cy="120" r="72" opacity="0.22" />
-      </g>
-
       {/* thinking arc — a short comet that orbits while Echo thinks */}
       <g className="think-arc" style={{ opacity: phase === 'thinking' ? 0.7 : 0 }}>
         <path
@@ -97,23 +90,36 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
         <ellipse cx="102" cy="98" rx="22" ry="14" fill="url(#m-spec)" transform="rotate(-24 102 98)" />
         <circle cx="99" cy="94" r="4.5" fill="#fff" opacity="0.9" />
 
-        {/* eyes crossfade between open (idle/listening) and content (thinking/speaking) */}
-        <g className="m-eyes">
-          <g className="eyes-open" style={{ opacity: happy ? 0 : 1 }}>
-            <ellipse cx="108" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
-            <ellipse cx="132" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
+        {/* the face tilts/perks up per phase for personality */}
+        <g className="m-face">
+          {/* eyes crossfade between open (idle/listening) and content (thinking/speaking) */}
+          <g className="m-eyes">
+            <g className="eyes-open" style={{ opacity: happy ? 0 : 1 }}>
+              <ellipse cx="108" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
+              <ellipse cx="132" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
+            </g>
+            <g
+              className="eyes-happy"
+              style={{ opacity: happy ? 1 : 0 }}
+              fill="none"
+              stroke="#222F27"
+              strokeWidth="3.4"
+              strokeLinecap="round"
+            >
+              <path d="M101 124 Q108 116 115 124" />
+              <path d="M125 124 Q132 116 139 124" />
+            </g>
           </g>
-          <g
-            className="eyes-happy"
-            style={{ opacity: happy ? 1 : 0 }}
-            fill="none"
-            stroke="#222F27"
-            strokeWidth="3.4"
-            strokeLinecap="round"
-          >
-            <path d="M101 124 Q108 116 115 124" />
-            <path d="M125 124 Q132 116 139 124" />
-          </g>
+          {/* a little mouth that opens and closes while speaking */}
+          <ellipse
+            className="m-mouth"
+            cx="120"
+            cy="139"
+            rx="6"
+            ry="4.5"
+            fill="#222F27"
+            style={{ opacity: phase === 'speaking' ? 1 : 0 }}
+          />
         </g>
       </g>
     </svg>

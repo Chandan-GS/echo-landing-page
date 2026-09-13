@@ -1316,36 +1316,63 @@
   animation: heroGlow 7s ease-in-out infinite;
 }
 
-/* Mascot phase loop — seamless crossfades between idle/listening/thinking/speaking */
+/* Mascot phase loop — seamless crossfades + personality */
+.m-face {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: 120px 122px;
+}
+svg[data-phase='listening'] .m-face {
+  transform: translateY(-2px) scale(1.03);
+}
+svg[data-phase='thinking'] .m-face {
+  transform: translate(-3px, -5px) rotate(-5deg);
+}
+svg[data-phase='speaking'] .m-face {
+  transform: translateY(1px);
+}
 .m-eyes {
   animation: blink 4.6s ease-in-out infinite;
+  transform-origin: 120px 122px;
+}
+.eyes-open {
+  animation: glance 6s ease-in-out infinite;
   transform-origin: 120px 122px;
 }
 .eyes-open,
 .eyes-happy {
   transition: opacity 0.4s ease;
 }
+.m-mouth {
+  transition: opacity 0.3s ease;
+  transform-origin: 120px 139px;
+}
+svg[data-phase='speaking'] .m-mouth {
+  animation: talk 0.34s ease-in-out infinite alternate;
+}
 .m-glow-c {
   transition: opacity 0.7s ease;
-}
-.m-rings {
-  transition: transform 0.6s ease;
-  transform-origin: 120px 120px;
-}
-svg[data-phase='listening'] .m-rings {
-  transform: scale(0.9);
-}
-svg[data-phase='speaking'] .m-rings {
-  transform: scale(1.08);
 }
 .think-arc {
   transition: opacity 0.5s ease;
   transform-origin: 120px 120px;
   animation: arcSpin 2.6s linear infinite;
 }
+svg[data-phase='speaking'] .orb-core {
+  animation: floaty 1.5s ease-in-out infinite;
+}
 @keyframes blink {
   0%, 90%, 100% { transform: scaleY(1); }
   95% { transform: scaleY(0.12); }
+}
+@keyframes glance {
+  0%, 100% { transform: translateX(0); }
+  22% { transform: translateX(-3px); }
+  55% { transform: translateX(3px); }
+  78% { transform: translateX(0); }
+}
+@keyframes talk {
+  from { transform: scaleY(0.35); }
+  to { transform: scaleY(1.15); }
 }
 @keyframes arcSpin {
   to { transform: rotate(360deg); }
