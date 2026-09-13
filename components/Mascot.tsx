@@ -94,8 +94,23 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
           {/* eyes crossfade between open (idle/listening) and content (thinking/speaking) */}
           <g className="m-eyes">
             <g className="eyes-open" style={{ opacity: happy ? 0 : 1 }}>
-              <ellipse cx="108" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
-              <ellipse cx="132" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
+              {/* left eye winks on its own now and then */}
+              <g className="eye-wink">
+                <ellipse
+                  cx="108"
+                  cy="122"
+                  rx={phase === 'listening' ? 5.6 : 5}
+                  ry={phase === 'listening' ? 10.5 : 8}
+                  fill="#222F27"
+                />
+              </g>
+              <ellipse
+                cx="132"
+                cy="122"
+                rx={phase === 'listening' ? 5.6 : 5}
+                ry={phase === 'listening' ? 10.5 : 8}
+                fill="#222F27"
+              />
             </g>
             <g
               className="eyes-happy"
@@ -109,16 +124,6 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
               <path d="M125 124 Q132 116 139 124" />
             </g>
           </g>
-          {/* a little mouth that opens and closes while speaking */}
-          <ellipse
-            className="m-mouth"
-            cx="120"
-            cy="139"
-            rx="6"
-            ry="4.5"
-            fill="#222F27"
-            style={{ opacity: phase === 'speaking' ? 1 : 0 }}
-          />
         </g>
       </g>
     </svg>
