@@ -1,4 +1,3 @@
-import Mascot from './Mascot';
 import Reveal from './Reveal';
 import PlayBadge from './PlayBadge';
 import { CheckIcon } from './icons';
@@ -38,11 +37,8 @@ export default function Hero() {
           </Reveal>
         </div>
 
-        <div className="hero-visual">
-          <Reveal className="hero-mascot-wrap" as="div">
-            <Mascot className="hero-mascot-solo float-orb" />
-          </Reveal>
-        </div>
+        {/* Echo lives here in the hero, then follows the scroll (EchoGuide). */}
+        <div className="hero-visual" aria-hidden="true" />
       </div>
     </section>
   );

@@ -1316,6 +1316,21 @@
   animation: heroGlow 7s ease-in-out infinite;
 }
 
+/* Echo scroll companion — fixed overlay positioned by JS on scroll */
+.echo-guide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  pointer-events: none;
+  will-change: transform, width, height;
+}
+.echo-guide svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 /* Mascot phase loop — seamless crossfades + personality */
 .m-face {
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1329,9 +1344,6 @@ svg[data-phase='thinking'] .m-face {
 }
 svg[data-phase='speaking'] .m-face {
   transform: translateY(1px) rotate(1.5deg);
-}
-.m-cheeks {
-  transition: opacity 0.45s ease;
 }
 .m-eyes {
   animation: blink 4.6s ease-in-out infinite;

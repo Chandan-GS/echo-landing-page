@@ -91,11 +91,6 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
 
         {/* the face tilts/perks up per phase for personality */}
         <g className="m-face">
-          {/* blush cheeks warm up when Echo is content (thinking/speaking) */}
-          <g className="m-cheeks" style={{ opacity: happy ? 0.5 : 0 }}>
-            <circle cx="98" cy="132" r="5.5" fill="#F2A399" />
-            <circle cx="142" cy="132" r="5.5" fill="#F2A399" />
-          </g>
           {/* eyes crossfade between open (idle/listening) and content (thinking/speaking) */}
           <g className="m-eyes">
             <g className="eyes-open" style={{ opacity: happy ? 0 : 1 }}>

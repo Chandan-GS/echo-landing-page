@@ -10,10 +10,12 @@ import FAQ from '@/components/FAQ';
 import FinalCTA from '@/components/FinalCTA';
 import Footer from '@/components/Footer';
 import DownloadModal from '@/components/DownloadModal';
+import EchoGuide from '@/components/EchoGuide';
 
 export default function Home() {
   return (
     <>
+      <EchoGuide />
       <Nav />
       <main>
         <Hero />
