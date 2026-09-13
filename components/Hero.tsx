@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Mascot from './Mascot';
 import Reveal from './Reveal';
 import PlayBadge from './PlayBadge';
@@ -43,15 +42,8 @@ export default function Hero() {
         </div>
 
         <div className="hero-visual">
-          <Mascot />
-          <Reveal className="hero-phone" as="div">
-            <Image
-              src="/home.jpeg"
-              alt="Echo Home on a dark screen: a serif 'Good evening, Chandan' greeting, '101 notifications captured today', a live 'Next Briefing in 10:02:54 at 7:00 AM' countdown, and a 'Play Today's Briefing' card."
-              width={720}
-              height={1560}
-              priority
-            />
+          <Reveal className="hero-mascot-wrap" as="div">
+            <Mascot className="hero-mascot-solo float-orb" />
           </Reveal>
         </div>
       </div>

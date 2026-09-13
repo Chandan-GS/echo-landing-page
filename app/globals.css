@@ -294,13 +294,23 @@
     color: var(--green);
   }
 
-  /* Hero visual: phone + mascot */
+  /* Hero visual: the mascot, front and centre. */
   .hero-visual {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 460px;
+  }
+  .hero-mascot-wrap {
+    position: relative;
+    width: min(440px, 90%);
+    filter: drop-shadow(0 30px 80px rgba(110, 188, 118, 0.22));
+  }
+  .hero-mascot-solo {
+    width: 100%;
+    height: auto;
+    display: block;
   }
   .hero-phone {
     position: relative;

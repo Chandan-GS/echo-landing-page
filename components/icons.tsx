@@ -164,7 +164,7 @@ export function GooglePlayBadge({ className, height = 52 }: { className?: string
       aria-label="Get it on Google Play"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect x="1.5" y="1.5" width="643" height="197" rx="30" fill="#000" stroke="#A6A6A6" strokeWidth="3" />
+      <rect x="1.5" y="1.5" width="643" height="197" rx="30" fill="#49884F" stroke="#6EBC76" strokeWidth="3" />
       {/* Play triangle logo */}
       <g transform="translate(40 54)">
         <path d="M2 4C.8 5.2.2 6.9.2 9v74c0 2.1.6 3.8 1.8 5l.4.3 41.5-41.5v-1L2.4 3.7 2 4Z" fill="#00D2FF" />

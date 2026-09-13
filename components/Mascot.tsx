@@ -13,41 +13,49 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
       className={className}
     >
       <defs>
-        <radialGradient id="m-orb" cx="44%" cy="40%" r="64%">
+        {/* Pearlescent orb body — matches the app's EchoMascot exactly. */}
+        <radialGradient id="m-orb" cx="45%" cy="52%" r="62%">
           <stop offset="0%" stopColor="#FFFFFF" />
-          <stop offset="34%" stopColor="#E8F7EC" />
-          <stop offset="64%" stopColor="#AECFB4" />
-          <stop offset="86%" stopColor="#6EBC76" />
-          <stop offset="100%" stopColor="#49884F" />
+          <stop offset="30%" stopColor="#F4F9F0" />
+          <stop offset="60%" stopColor="#D9E8DB" />
+          <stop offset="84%" stopColor="#B4D1BA" />
+          <stop offset="100%" stopColor="#9EC0A6" />
         </radialGradient>
         <radialGradient id="m-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#6EBC76" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#6EBC76" stopOpacity="0" />
+          <stop offset="0%" stopColor="#D6EBDA" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#D6EBDA" stopOpacity="0" />
+        </radialGradient>
+        {/* soft green bottom shade for depth */}
+        <radialGradient id="m-shade" cx="50%" cy="80%" r="55%">
+          <stop offset="0%" stopColor="#5E8568" stopOpacity="0" />
+          <stop offset="72%" stopColor="#5E8568" stopOpacity="0" />
+          <stop offset="100%" stopColor="#5E8568" stopOpacity="0.3" />
         </radialGradient>
         <radialGradient id="m-spec" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#fff" stopOpacity="0.95" />
           <stop offset="100%" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
-        <filter id="m-soft" x="-70%" y="-70%" width="240%" height="240%">
-          <feGaussianBlur stdDeviation="5" />
+        <filter id="m-soft" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="6" />
         </filter>
       </defs>
 
-      {/* sonar ripple rings */}
-      <g fill="none" stroke="#6EBC76" strokeWidth="3">
+      {/* soft green glow + sonar ripple rings (app palette) */}
+      <circle cx="120" cy="122" r="100" fill="url(#m-glow)" filter="url(#m-soft)" />
+      <g fill="none" stroke="#8FE0A6" strokeWidth="3">
         <circle className="ring-a" cx="120" cy="120" r="72" opacity="0.6" />
         <circle className="ring-b" cx="120" cy="120" r="72" opacity="0.6" />
         <circle className="ring-c" cx="120" cy="120" r="72" opacity="0.6" />
       </g>
 
       <g className="orb-core">
-        <circle cx="120" cy="122" r="98" fill="url(#m-glow)" filter="url(#m-soft)" />
         <circle cx="120" cy="120" r="60" fill="url(#m-orb)" />
+        <circle cx="120" cy="120" r="60" fill="url(#m-shade)" />
         <ellipse cx="102" cy="98" rx="22" ry="14" fill="url(#m-spec)" transform="rotate(-24 102 98)" />
         <circle cx="99" cy="94" r="4.5" fill="#fff" opacity="0.9" />
         {/* two-eye face */}
-        <ellipse cx="108" cy="122" rx="5" ry="8" fill="#16301B" />
-        <ellipse cx="132" cy="122" rx="5" ry="8" fill="#16301B" />
+        <ellipse cx="108" cy="122" rx="5" ry="8" fill="#222F27" />
+        <ellipse cx="132" cy="122" rx="5" ry="8" fill="#222F27" />
       </g>
     </svg>
   );
