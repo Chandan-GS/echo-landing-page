@@ -1,1575 +1,693 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Echo — Your Notifications, Summarized</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet" />
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --bg: #0c0c0c;
-            --surface: #161616;
-            --surface2: #1e1e1e;
-            --green: #4caf6a;
-            --green-dim: #2d6b42;
-            --green-glow: rgba(76, 175, 106, 0.18);
-            --text: #f0f0f0;
-            --muted: #7a7a7a;
-            --border: rgba(255, 255, 255, 0.07);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 16px 48px;
-            background: linear-gradient(to bottom, rgba(12, 12, 12, 0.95) 0%, transparent 100%);
-            backdrop-filter: blur(8px);
-        }
-
-        .nav-content {
-            max-width: 1100px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .nav-logo-img {
-            margin-top: 10px;
-            height: 50px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .nav-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: -0.02em;
-        }
-
-        .nav-logo span {
-            color: var(--green);
-        }
-
-        .nav-cta {
-            background: var(--surface2);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 10px 24px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .nav-cta:hover {
-            background: var(--text);
-            color: var(--bg);
-            transform: translateY(-1px);
-        }
-
-        /* ── BUTTONS ── */
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--green);
-            color: #000;
-            border: none;
-            border-radius: 100px;
-            padding: 18px 40px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
-            font-family: 'Inter', sans-serif;
-            box-shadow: 0 8px 24px rgba(76, 175, 106, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(76, 175, 106, 0.35);
-            opacity: 0.95;
-        }
-
-        /* ── HERO ── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 140px 24px 80px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 400px;
-            background: radial-gradient(ellipse, rgba(76, 175, 106, 0.12) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .notif-ticker {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .notif-pill {
-            position: absolute;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 6px 14px;
-            font-size: 0.72rem;
-            font-weight: 500;
-            color: var(--muted);
-            white-space: nowrap;
-            animation: floatUp linear infinite;
-            opacity: 0;
-        }
-
-        .notif-pill .dot {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: var(--green);
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
-        @keyframes floatUp {
-            0% {
-                opacity: 0;
-                transform: translateY(0);
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            80% {
-                opacity: 0.6;
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateY(-280px);
-            }
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 6px 16px;
-            font-size: 0.78rem;
-            font-weight: 500;
-            color: var(--green);
-            margin-bottom: 28px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        .hero-eyebrow::before {
-            content: '';
-            display: block;
-            width: 6px;
-            height: 6px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse 2s ease infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.4;
-                transform: scale(0.7);
-            }
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 8vw, 6.5rem);
-            font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            max-width: 900px;
-            margin: 0 auto 12px;
-        }
-
-        .hero h1 em {
-            font-style: italic;
-            color: var(--green);
-        }
-
-        .hero-sub {
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            color: var(--muted);
-            font-weight: 400;
-            line-height: 1.6;
-            max-width: 520px;
-            margin: 16px auto 48px;
-        }
-
-        .hero-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .hero-note {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-top: 8px;
-        }
-
-        /* ── PHONES SHOWCASE ── */
-        .showcase {
-            padding: 60px 24px 140px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .phones-row {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .phone-wrap {
-            position: relative;
-            flex-shrink: 0;
-            transition: transform 0.6s cubic-bezier(.22, 1, .36, 1), opacity 0.6s ease;
-            margin: 0 -15px;
-            /* Overlap effect */
-        }
-
-        /* Initial state before fade-in (slanting and shifted down) */
-        .phone-wrap.fade-in {
-            opacity: 0;
-        }
-
-        .phone-wrap.fade-in:nth-child(1) {
-            transform: rotate(-15deg) translateY(80px);
-        }
-
-        .phone-wrap.fade-in:nth-child(2) {
-            transform: rotate(5deg) translateY(60px);
-        }
-
-        .phone-wrap.fade-in:nth-child(3) {
-            transform: rotate(12deg) translateY(70px);
-        }
-
-        /* Final state when visible */
-        .phone-wrap.fade-in.visible {
-            opacity: 1;
-        }
-
-        .phone-wrap.fade-in.visible:nth-child(1) {
-            transform: rotate(-6deg) translateY(30px);
-            z-index: 1;
-        }
-
-        .phone-wrap.fade-in.visible:nth-child(2) {
-            transform: rotate(0deg) translateY(0px);
-            z-index: 3;
-        }
-
-        .phone-wrap.fade-in.visible:nth-child(3) {
-            transform: rotate(4deg) translateY(20px);
-            z-index: 2;
-        }
-
-        /* Hover state with responsive lift and interactive slanting */
-
-        .phone-wrap.fade-in.visible:nth-child(1):hover {
-            transform: rotate(-8deg) translateY(-25px) scale(1.08);
-        }
-
-        .phone-wrap.fade-in.visible:nth-child(2):hover {
-            transform: rotate(3deg) translateY(-30px) scale(1.1);
-        }
-
-        .phone-wrap.fade-in.visible:nth-child(3):hover {
-            transform: rotate(8deg) translateY(-25px) scale(1.08);
-        }
-
-        .phone-wrap.fade-in.visible:hover .phone-frame {
-            box-shadow:
-                0 60px 120px rgba(0, 0, 0, 0.95),
-                0 0 50px rgba(76, 175, 106, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border-color: rgba(76, 175, 106, 0.45);
-        }
-
-        .phone-frame {
-            width: 210px;
-            border-radius: 38px;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow:
-                0 40px 80px rgba(0, 0, 0, 0.7),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            background: #111;
-            transition: border-color 0.4s cubic-bezier(.22, 1, .36, 1), box-shadow 0.4s cubic-bezier(.22, 1, .36, 1);
-        }
-
-        .phone-frame img {
-            width: 100%;
-            display: block;
-        }
-
-        .phone-wrap:nth-child(2) .phone-frame {
-            width: 240px;
-            border-color: rgba(76, 175, 106, 0.3);
-            box-shadow:
-                0 50px 100px rgba(0, 0, 0, 0.8),
-                0 0 60px rgba(76, 175, 106, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-
-        /* ── STAT BAND ── */
-        .stat-band {
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 60px 24px;
-            display: flex;
-            justify-content: center;
-            gap: 80px;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-num {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--green);
-            line-height: 1;
-            letter-spacing: -0.03em;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-top: 6px;
-            font-weight: 400;
-        }
-
-        /* ── FEATURES ── */
-        .features {
-            padding: 100px 24px 120px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .features-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-
-        .section-label {
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--green);
-            margin-bottom: 16px;
-        }
-
-        .section-h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            font-weight: 700;
-            line-height: 1.15;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-        }
-
-        .section-desc {
-            color: var(--muted);
-            font-size: 1.05rem;
-            line-height: 1.65;
-            max-width: 500px;
-            margin: 0 auto 56px;
-        }
-
-        .feat-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
-
-        .feat-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 32px;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .feat-card:hover {
-            border-color: rgba(76, 175, 106, 0.25);
-            transform: translateY(-4px);
-        }
-
-        .feat-card.wide {
-            grid-column: span 2;
-        }
-
-        .feat-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--green-glow);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            color: var(--green);
-        }
-
-        .feat-icon svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        .feat-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-
-        .feat-card p {
-            color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.65;
-        }
-
-        .vault-mini {
-            margin-top: 24px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .vault-tag {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 6px 16px;
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .vault-tag.green {
-            background: rgba(76, 175, 106, 0.12);
-            border-color: rgba(76, 175, 106, 0.2);
-            color: var(--green);
-        }
-
-        .briefing-preview {
-            margin-top: 24px;
-            background: var(--surface2);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .bp-time {
-            font-size: 0.8rem;
-            color: var(--muted);
-            margin-bottom: 4px;
-        }
-
-        .bp-countdown {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: -0.02em;
-            line-height: 1;
-        }
-
-        .bp-label {
-            font-size: 0.85rem;
-            color: var(--green);
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* ── AI TOGGLE SECTION ── */
-        .ai-toggle-section {
-            padding: 80px 24px 120px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .ai-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            max-width: 720px;
-            width: 100%;
-        }
-
-        .ai-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 32px;
-            text-align: left;
-            position: relative;
-            transition: border-color 0.2s, transform 0.2s;
-            cursor: default;
-        }
-
-        .ai-card:hover {
-            border-color: rgba(76, 175, 106, 0.3);
-            transform: translateY(-4px);
-        }
-
-        .ai-card.active {
-            border-color: var(--green);
-            background: linear-gradient(135deg, #161616 0%, #1a2620 100%);
-        }
-
-        .ai-card.active::after {
-            content: 'Recommended';
-            position: absolute;
-            top: -1px;
-            right: 20px;
-            background: var(--green);
-            color: #000;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 0 0 8px 8px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        .ai-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-            color: var(--green);
-        }
-
-        .ai-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .ai-icon.cloud {
-            background: rgba(76, 175, 106, 0.12);
-        }
-
-        .ai-icon.edge {
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .ai-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .ai-card p {
-            color: var(--muted);
-            font-size: 0.875rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .ai-pill-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .ai-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: #aaa;
-            font-weight: 400;
-        }
-
-        .ai-pill::before {
-            content: '';
-            width: 5px;
-            height: 5px;
-            background: var(--green);
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        /* ── SCREENSHOT GRID ── */
-        .screenshots {
-            padding: 80px 24px 120px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .screenshots-header {
-            text-align: center;
-            margin-bottom: 56px;
-        }
-
-        .ss-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            align-items: end;
-        }
-
-        .ss-item {
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            transition: transform 0.3s;
-        }
-
-        .ss-item:hover {
-            transform: scale(1.03);
-        }
-
-        .ss-item img {
-            width: 100%;
-            display: block;
-        }
-
-        .ss-item:nth-child(2) {
-            margin-top: -30px;
-        }
-
-        .ss-item:nth-child(4) {
-            margin-top: -20px;
-        }
-
-        .ss-caption {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 0.85rem;
-            color: var(--muted);
-            font-weight: 500;
-        }
-
-        .ss-col {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        /* ── CTA SECTION ── */
-        .cta-section {
-            padding: 120px 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border-top: 1px solid var(--border);
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 700px;
-            height: 400px;
-            background: radial-gradient(ellipse, rgba(76, 175, 106, 0.09) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .cta-section h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 700;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-            max-width: 720px;
-            margin: 0 auto 20px;
-        }
-
-        .cta-section h2 em {
-            font-style: italic;
-            color: var(--green);
-        }
-
-        .cta-section p {
-            color: var(--muted);
-            font-size: 1.1rem;
-            max-width: 440px;
-            margin: 0 auto 40px;
-            line-height: 1.6;
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 40px 48px;
-        }
-
-        .footer-content {
-            max-width: 1100px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .footer-logo-container {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-        }
-
-        .footer-logo-img {
-            margin-top: 10px;
-            height: 55px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .footer-logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.3rem;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: -0.02em;
-        }
-
-        .footer-logo-text span {
-            color: var(--green);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 28px;
-        }
-
-        .footer-links a {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: var(--text);
-        }
-
-        .footer-copy {
-            color: var(--muted);
-            font-size: 0.85rem;
-        }
-
-        /* ── WAVEFORM ANIM ── */
-        .wave-bars {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            height: 28px;
-        }
-
-        .wave-bar {
-            width: 3px;
-            border-radius: 2px;
-            background: var(--green);
-            animation: wave 1.2s ease-in-out infinite;
-        }
-
-        @keyframes wave {
-
-            0%,
-            100% {
-                height: 4px;
-            }
-
-            50% {
-                height: 20px;
-            }
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 900px) {
-            .feat-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .feat-card.wide {
-                grid-column: span 2;
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                padding: 16px 20px;
-            }
-
-            .ai-cards,
-            .feat-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .feat-card.wide {
-                grid-column: span 1;
-            }
-
-            .ss-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .ss-item:nth-child(2),
-            .ss-item:nth-child(4) {
-                margin-top: 0;
-            }
-
-            .stat-band {
-                gap: 40px;
-                padding: 40px 20px;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .footer-links {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .phone-frame {
-                width: 160px !important;
-            }
-
-            .phone-wrap:nth-child(2) .phone-frame {
-                width: 185px !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero {
-                padding: 120px 20px 60px;
-            }
-
-            .phone-frame {
-                width: 130px !important;
-            }
-
-            .phone-wrap:nth-child(2) .phone-frame {
-                width: 150px !important;
-            }
-
-            .btn-primary {
-                width: 100%;
-                padding: 16px 24px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            .notif-pill,
-            .wave-bar,
-            .hero::before {
-                animation: none;
-            }
-
-            * {
-                transition: none !important;
-            }
-        }
-
-        /* scroll fade-in */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ── MODAL POPUP ── */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            width: 90%;
-            max-width: 540px;
-            padding: 36px;
-            position: relative;
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(76, 175, 106, 0.1);
-        }
-
-        .modal-overlay.active .modal-card {
-            transform: scale(1) translateY(0);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            background: rgba(255, 255, 255, 0.05);
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            color: var(--text);
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s, transform 0.2s;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.05);
-        }
-
-        .modal-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .modal-title svg {
-            color: var(--green);
-        }
-
-        .modal-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-bottom: 32px;
-            text-align: left;
-        }
-
-        .modal-step {
-            display: flex;
-            gap: 16px;
-        }
-
-        .step-num {
-            width: 28px;
-            height: 28px;
-            background: var(--green-glow);
-            border: 1px solid rgba(76, 175, 106, 0.3);
-            color: var(--green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-        }
-
-        .step-content h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text);
-        }
-
-        .step-content p {
-            font-size: 0.88rem;
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        .step-content strong {
-            color: var(--text);
-        }
-
-        .modal-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn-modal-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--green);
-            color: #000;
-            border: none;
-            border-radius: 100px;
-            padding: 16px 32px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
-            font-family: 'Inter', sans-serif;
-            box-shadow: 0 8px 24px rgba(76, 175, 106, 0.2);
-            width: 100%;
-        }
-
-        .btn-modal-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(76, 175, 106, 0.35);
-            opacity: 0.95;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Echo — Your private morning briefing, spoken aloud</title>
+<meta name="description" content="Echo quietly captures your notifications, messages and calendar, then reads you a calm, personalized spoken briefing every morning. Processed on-device by default. Private, ad-free, and yours.">
+<meta name="theme-color" content="#F4F2EE">
+<link rel="canonical" href="https://echo.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Echo">
+<meta property="og:title" content="Echo — Your private morning briefing, spoken aloud">
+<meta property="og:description" content="Echo captures your notifications, messages and calendar, then reads you a calm spoken briefing. On-device by default. Private.">
+<meta property="og:image" content="https://echo.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://echo.app/">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Echo — Your private morning briefing, spoken aloud">
+<meta name="twitter:description" content="Echo captures your notifications, messages and calendar, then reads you a calm spoken briefing. On-device by default. Private.">
+<meta name="twitter:image" content="https://echo.app/og-image.png">
+
+<link rel="icon" type="image/png" sizes="256x256" href="favicon-256.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="favicon-256.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F4F2EE; --surface:#FBFAF7; --white:#fff;
+    --green:#49884F; --green-deep:#3B6E40; --green-bright:#6EBC76;
+    --accent:#D1E6D3; --accent2:#AECFB4;
+    --ink:#1E1E1E; --ink-2:#5A5A5A; --hair:#E6E0D3;
+    --char:#141810; --char-2:#1A1A1A; --light:#EFEFEF;
+    --serif:'Old Standard TT',Georgia,'Times New Roman',serif;
+    --sans:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --radius:26px; --radius-lg:34px;
+    --shadow:0 18px 46px rgba(40,54,42,.10);
+    --shadow-lg:0 34px 80px rgba(20,28,18,.30);
+    --wrap:1160px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);
+    line-height:1.6;overflow-x:clip;font-size:17px;-webkit-font-smoothing:antialiased}
+  main{overflow-x:clip}
+  img,svg{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.05;letter-spacing:-.5px}
+  em{font-style:italic}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px;width:100%}
+  .eyebrow{font-size:12.5px;letter-spacing:2.6px;font-weight:800;text-transform:uppercase;color:var(--green)}
+  section{position:relative}
+  :focus-visible{outline:3px solid var(--green);outline-offset:3px;border-radius:6px}
+
+  /* ---------- buttons ---------- */
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);
+    font-weight:800;font-size:16px;padding:15px 26px;border-radius:16px;border:0;cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--ink);color:var(--paper);box-shadow:0 12px 30px rgba(20,24,16,.22)}
+  .btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--hair)}
+
+  /* Google Play badge button */
+  .gplay{display:inline-flex;align-items:center;gap:13px;background:var(--ink);color:#fff;
+    padding:13px 24px 13px 20px;border-radius:15px;transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 14px 32px rgba(20,24,16,.24)}
+  .gplay:hover{transform:translateY(-2px);box-shadow:0 20px 40px rgba(20,24,16,.30)}
+  .gplay .txt{display:flex;flex-direction:column;line-height:1.1;text-align:left}
+  .gplay .txt small{font-size:11px;letter-spacing:.6px;opacity:.85;font-weight:600}
+  .gplay .txt b{font-size:20px;font-weight:700;letter-spacing:.2px}
+  .gplay svg{flex:0 0 auto}
+
+  /* ---------- header ---------- */
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(1.2) blur(12px);
+    background:rgba(244,242,238,.82);border-bottom:1px solid rgba(230,224,211,.7)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-weight:700;font-size:22px;letter-spacing:-.4px}
+  .brand svg{width:36px;height:36px}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a.lnk{font-weight:700;font-size:15px;color:var(--ink-2)}
+  .nav-links a.lnk:hover{color:var(--ink)}
+  .nav-cta{padding:10px 20px;border-radius:13px;background:var(--green);color:#fff!important;font-weight:800;font-size:14px}
+  .nav-cta:hover{background:var(--green-deep)}
+  @media(max-width:760px){
+    .nav-links a.lnk{display:none}
+    .nav-links{gap:0}
+    .nav-cta{padding:9px 15px;font-size:13px}
+    .wrap.nav-inner{padding-left:18px;padding-right:18px}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding:56px 0 40px;text-align:center;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(60% 46% at 50% 8%, rgba(174,207,180,.45), rgba(244,242,238,0) 70%)}
+  .hero-orb{width:min(240px,58vw);height:min(240px,58vw);margin:0 auto 6px}
+  .hero h1{font-size:clamp(40px,8.4vw,74px);letter-spacing:-1.4px;margin:0 auto;max-width:14ch}
+  .hero h1 em{color:var(--green)}
+  .hero .lede{font-size:clamp(17px,2.4vw,21px);color:var(--ink-2);max-width:600px;margin:20px auto 0;line-height:1.55}
+  .hero .cta-row{margin-top:32px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .hero .fine{margin-top:18px;font-size:13.5px;color:var(--ink-2)}
+  .hero .fine a{color:var(--green);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+  .trust-row{margin-top:30px;display:flex;gap:10px 26px;justify-content:center;flex-wrap:wrap;
+    font-size:13.5px;font-weight:700;color:#5c6a5d}
+  .trust-row span{display:inline-flex;align-items:center;gap:7px}
+  .trust-row svg{width:16px;height:16px;color:var(--green)}
+
+  /* ---------- how it works strip ---------- */
+  .how{padding:8px 0 8px}
+  .how-card{background:var(--char);color:var(--light);border-radius:var(--radius-lg);
+    padding:34px 30px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:14px;align-items:center;
+    box-shadow:var(--shadow)}
+  .how-step{text-align:center}
+  .how-step .n{font-family:var(--serif);font-size:13px;letter-spacing:2px;color:var(--green-bright);font-weight:700}
+  .how-step h3{font-size:23px;color:#fff;margin:8px 0 4px}
+  .how-step p{font-size:14.5px;color:#AFC0AC;line-height:1.45;max-width:24ch;margin:0 auto}
+  .how-arrow{color:#3c5140;font-size:26px;font-weight:700}
+  @media(max-width:820px){
+    .how-card{grid-template-columns:1fr;gap:22px}
+    .how-arrow{transform:rotate(90deg);font-size:20px}
+  }
+
+  /* ---------- section heading ---------- */
+  .sec{padding:74px 0}
+  .sec-head{max-width:640px;margin:0 auto 44px;text-align:center}
+  .sec-head h2{font-size:clamp(30px,5vw,46px);letter-spacing:-1px;margin-top:12px}
+  .sec-head p{color:var(--ink-2);font-size:18px;margin-top:16px;line-height:1.55}
+
+  /* ---------- feature rows ---------- */
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin:0 auto;max-width:var(--wrap)}
+  .feature + .feature{margin-top:84px}
+  .feature.rev .f-text{order:2}
+  .f-text .eyebrow{margin-bottom:14px;display:block}
+  .f-text h2{font-size:clamp(28px,4.4vw,40px);letter-spacing:-.8px}
+  .f-text p{color:var(--ink-2);font-size:17.5px;margin-top:16px;line-height:1.6}
+  .f-list{margin-top:22px;display:flex;flex-direction:column;gap:12px}
+  .f-list li{list-style:none;display:flex;gap:12px;align-items:flex-start;font-size:15.5px;font-weight:600;color:#38423a}
+  .f-list .tick{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--accent);
+    display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .f-list .tick svg{width:14px;height:14px;color:var(--green-deep)}
+
+  /* device / phone frame */
+  .device{position:relative;margin:0 auto;width:100%;max-width:320px}
+  .device .frame{position:relative;border-radius:44px;padding:11px;background:#15130f;
+    box-shadow:var(--shadow-lg);border:1px solid #2a271f}
+  .device .frame::before{content:"";position:absolute;top:15px;left:50%;transform:translateX(-50%);
+    width:96px;height:6px;border-radius:6px;background:#2c2a24;z-index:3}
+  .device .frame img{width:100%;border-radius:34px;display:block}
+  .device.glow::after{content:"";position:absolute;inset:-14% -10% -10%;z-index:-1;
+    background:radial-gradient(60% 55% at 50% 42%, rgba(110,188,118,.30), rgba(110,188,118,0) 70%);filter:blur(6px)}
+
+  /* ---------- feature grid (6 cards) ---------- */
+  .fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .fcard{background:var(--surface);border-radius:var(--radius);padding:28px 26px;box-shadow:var(--shadow);
+    transition:transform .18s ease, box-shadow .18s ease}
+  .fcard:hover{transform:translateY(-4px);box-shadow:0 26px 56px rgba(40,54,42,.14)}
+  .fcard .ic{width:52px;height:52px;border-radius:16px;background:var(--accent);
+    display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .fcard .ic svg{width:26px;height:26px;color:var(--green-deep)}
+  .fcard h3{font-size:21px;margin-bottom:8px}
+  .fcard p{font-size:15px;color:var(--ink-2);line-height:1.55}
+  @media(max-width:900px){ .fgrid{grid-template-columns:1fr 1fr} }
+  @media(max-width:560px){ .fgrid{grid-template-columns:1fr} }
+
+  /* ---------- privacy band (dark) ---------- */
+  .privacy{background:radial-gradient(120% 120% at 78% 12%, #2b4a30 0%, #1c3321 42%, #141810 100%);
+    color:var(--light);border-radius:var(--radius-lg);padding:60px 46px;position:relative;overflow:hidden;
+    box-shadow:var(--shadow)}
+  .privacy .eyebrow{color:var(--green-bright)}
+  .privacy h2{font-size:clamp(30px,5vw,44px);color:#fff;margin-top:12px;letter-spacing:-1px;max-width:16ch}
+  .privacy .p-lede{color:#C7D6C4;font-size:18px;margin-top:18px;max-width:52ch;line-height:1.6}
+  .privacy-grid{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .p-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:22px 22px}
+  .p-item .pic{width:42px;height:42px;border-radius:12px;background:rgba(110,188,118,.18);
+    display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .p-item .pic svg{width:22px;height:22px;color:#8FD69B}
+  .p-item h3{font-size:18px;color:#fff}
+  .p-item p{font-size:14px;color:#A9BAA6;margin-top:6px;line-height:1.5}
+  .privacy .rings{position:absolute;right:-90px;top:-70px;width:360px;opacity:.16;pointer-events:none}
+  @media(max-width:840px){ .privacy-grid{grid-template-columns:1fr} .privacy{padding:44px 26px} }
+
+  /* ---------- engine choice ---------- */
+  .engines{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:900px;margin:0 auto}
+  .engine{border-radius:var(--radius);padding:30px 28px;box-shadow:var(--shadow)}
+  .engine.local{background:var(--char);color:var(--light)}
+  .engine.cloud{background:var(--surface);color:var(--ink);border:1px solid var(--hair)}
+  .engine .tag{font-size:12px;letter-spacing:1.6px;font-weight:800;text-transform:uppercase}
+  .engine.local .tag{color:var(--green-bright)} .engine.cloud .tag{color:var(--green)}
+  .engine h3{font-size:24px;margin:10px 0 8px} .engine.local h3{color:#fff}
+  .engine p{font-size:15px;line-height:1.55} .engine.local p{color:#AFC0AC} .engine.cloud p{color:var(--ink-2)}
+  .engine ul{margin-top:16px;display:flex;flex-direction:column;gap:9px}
+  .engine li{list-style:none;font-size:14.5px;font-weight:600;display:flex;gap:9px;align-items:center}
+  .engine.local li{color:#DDEAD9} .engine.cloud li{color:#38423a}
+  .engine li svg{width:16px;height:16px;flex:0 0 auto}
+  .engine.local li svg{color:#8FD69B} .engine.cloud li svg{color:var(--green)}
+  @media(max-width:720px){ .engines{grid-template-columns:1fr} }
+
+  /* ---------- voices ---------- */
+  .voices{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:760px;margin:34px auto 0}
+  .voice{background:var(--surface);border:1px solid var(--hair);border-radius:22px;padding:22px 16px;text-align:center}
+  .voice .ring{width:56px;height:56px;border-radius:50%;margin:0 auto 12px;
+    background:radial-gradient(circle at 42% 38%, #fff, #D9E8DB 55%, #9EC0A6);
+    box-shadow:0 0 0 6px rgba(174,207,180,.35)}
+  .voice b{font-family:var(--serif);font-size:19px;font-weight:700;display:block}
+  .voice span{font-size:12.5px;color:var(--ink-2);display:block;margin-top:3px}
+  @media(max-width:640px){ .voices{grid-template-columns:1fr 1fr} }
+
+  /* screenshot showcase */
+  .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;max-width:940px;margin:0 auto;align-items:end}
+  .shots .device{max-width:none}
+  .shots figure{margin:0}
+  .shots figcaption{margin-top:16px;text-align:center;font-weight:700;font-size:15px;color:#38423a}
+  .shots figcaption small{display:block;font-weight:600;color:var(--ink-2);font-size:13px;margin-top:2px}
+  @media(max-width:820px){ .shots{grid-template-columns:1fr;gap:44px;max-width:320px} }
+
+  /* ---------- final CTA ---------- */
+  .final{text-align:center;padding:20px 0 90px}
+  .final .box{background:var(--char);color:var(--light);border-radius:var(--radius-lg);
+    padding:64px 34px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .final .orb{width:120px;height:120px;margin:0 auto 20px}
+  .final h2{font-size:clamp(30px,5.4vw,48px);color:#fff;letter-spacing:-1px;max-width:18ch;margin:0 auto}
+  .final p{color:#AFC0AC;font-size:18px;margin:16px auto 0;max-width:44ch}
+  .final .cta-row{margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .final .gplay{background:#fff;color:var(--char)}
+  .final .rings{position:absolute;left:-70px;bottom:-90px;width:320px;opacity:.14;pointer-events:none}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--hair);padding:46px 0 40px}
+  .foot-top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+  .foot-brand{max-width:320px}
+  .foot-brand .brand{margin-bottom:12px}
+  .foot-brand p{font-size:14.5px;color:var(--ink-2);line-height:1.55}
+  .foot-links{display:flex;gap:56px;flex-wrap:wrap}
+  .foot-col h4{font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:#8a8474;font-weight:800;margin-bottom:14px}
+  .foot-col a{display:block;font-size:15px;font-weight:600;color:#40483f;margin-bottom:10px}
+  .foot-col a:hover{color:var(--green)}
+  .foot-bottom{margin-top:40px;padding-top:22px;border-top:1px solid var(--hair);
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-2)}
+
+  /* feature stacking on mobile */
+  @media(max-width:820px){
+    .feature{grid-template-columns:1fr;gap:34px;text-align:center}
+    .feature.rev .f-text{order:0}
+    .f-list{align-items:center}
+    .f-list li{text-align:left;max-width:420px}
+    .sec{padding:56px 0}
+    .feature + .feature{margin-top:60px}
+  }
+
+  /* ---------- animation ---------- */
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes ripple{0%{transform:scale(.72);opacity:.75}100%{transform:scale(1.4);opacity:0}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+  .float-orb .orb-core{animation:floaty 5.5s ease-in-out infinite;transform-origin:center}
+  .float-orb .ring-a{transform-origin:120px 120px;animation:ripple 4.2s ease-out infinite}
+  .float-orb .ring-b{transform-origin:120px 120px;animation:ripple 4.2s ease-out infinite;animation-delay:1.4s}
+  .float-orb .ring-c{transform-origin:120px 120px;animation:ripple 4.2s ease-out infinite;animation-delay:2.8s}
+  .reveal{opacity:0}
+  .reveal.in{animation:fadeUp .7s ease forwards}
+  @media(prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto!important}
+    .float-orb .orb-core,.float-orb .ring-a,.float-orb .ring-b,.float-orb .ring-c{animation:none!important}
+    .reveal{opacity:1!important;animation:none!important}
+    .btn:hover,.gplay:hover,.fcard:hover{transform:none}
+  }
+</style>
 </head>
-
 <body>
 
-    <nav>
-        <div class="nav-content">
-            <a href="#" class="nav-logo-container">
-                <img src="logo.png" alt="Echo Logo" class="nav-logo-img" onerror="this.style.display='none'">
-                <div class="nav-logo">Echo</div>
-            </a>
-            <button class="nav-cta" onclick="openDownloadModal()">
-                Download
-            </button>
-        </div>
+<!-- shared mascot symbol (defs) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <radialGradient id="g-orb" cx="45%" cy="57%" r="60%">
+    <stop offset="0%" stop-color="#FFFFFF"/><stop offset="30%" stop-color="#F4F9F0"/>
+    <stop offset="60%" stop-color="#D9E8DB"/><stop offset="84%" stop-color="#B4D1BA"/><stop offset="100%" stop-color="#9EC0A6"/>
+  </radialGradient>
+  <radialGradient id="g-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#D6EBDA" stop-opacity=".9"/><stop offset="100%" stop-color="#D6EBDA" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-spec" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff" stop-opacity="1"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-bs" cx="50%" cy="80%" r="55%"><stop offset="0%" stop-color="#5E8568" stop-opacity="0"/><stop offset="72%" stop-color="#5E8568" stop-opacity="0"/><stop offset="100%" stop-color="#5E8568" stop-opacity=".3"/></radialGradient>
+  <linearGradient id="g-sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity=".92"/><stop offset="46%" stop-color="#D8EADC" stop-opacity=".6"/><stop offset="100%" stop-color="#98BEA2" stop-opacity=".3"/></linearGradient>
+  <filter id="g-soft" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="g-soft2" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="1.8"/></filter>
+</defs></svg>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Echo home">
+      <svg viewBox="0 0 240 240" aria-hidden="true">
+        <circle cx="120" cy="120" r="88" fill="url(#g-glow)" filter="url(#g-soft)"/>
+        <circle cx="120" cy="120" r="56" fill="url(#g-orb)"/><circle cx="120" cy="120" r="56" fill="url(#g-bs)"/>
+        <ellipse cx="100" cy="94" rx="24" ry="15" fill="url(#g-spec)" filter="url(#g-soft2)" transform="rotate(-24 100 94)"/>
+        <ellipse cx="108" cy="120" rx="5.5" ry="8.5" fill="#222f27"/><ellipse cx="132" cy="120" rx="5.5" ry="8.5" fill="#222f27"/>
+      </svg>
+      Echo
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a class="lnk" href="#briefing">Briefing</a>
+      <a class="lnk" href="#ask">Ask Echo</a>
+      <a class="lnk" href="#privacy">Privacy</a>
+      <a class="nav-cta" href="#get">Get the app</a>
     </nav>
+  </div>
+</header>
 
-    <section class="hero">
-        <div class="notif-ticker" id="ticker"></div>
+<main id="top">
 
-        <div class="hero-content">
-            <!-- <div class="hero-eyebrow fade-in">Background AI · Always Listening</div> -->
-            <h1 class="fade-in">Your day,<br /><em>summarized</em></h1>
-            <p class="hero-sub fade-in">
-                Echo silently captures every notification while you live your life.
-                Then delivers it back as a crisp morning briefing.
-            </p>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="wrap">
+      <svg class="hero-orb float-orb" viewBox="0 0 240 240" role="img" aria-label="Echo, the sound sprite mascot — a calm luminous orb with a two-eye face and glowing rings">
+        <g fill="none" stroke="url(#g-sheen)" filter="url(#g-soft2)" stroke-width="7">
+          <circle class="ring-a" cx="120" cy="120" r="82"/>
+          <circle class="ring-b" cx="120" cy="120" r="82"/>
+          <circle class="ring-c" cx="120" cy="120" r="82"/>
+        </g>
+        <g fill="none" stroke="url(#g-sheen)" filter="url(#g-soft2)">
+          <circle cx="120" cy="120" r="72" stroke-width="11" opacity=".8"/>
+          <circle cx="120" cy="120" r="88" stroke-width="11" opacity=".5"/>
+          <circle cx="120" cy="120" r="104" stroke-width="11" opacity=".3"/>
+        </g>
+        <g class="orb-core">
+          <circle cx="120" cy="122" r="98" fill="url(#g-glow)" filter="url(#g-soft)"/>
+          <circle cx="120" cy="120" r="56" fill="url(#g-orb)"/><circle cx="120" cy="120" r="56" fill="url(#g-bs)"/>
+          <ellipse cx="100" cy="94" rx="24" ry="15" fill="url(#g-spec)" filter="url(#g-soft2)" transform="rotate(-24 100 94)"/>
+          <circle cx="98" cy="90" r="5" fill="#fff" opacity=".95" filter="url(#g-soft2)"/>
+          <ellipse cx="108" cy="120" rx="5.5" ry="8.5" fill="#222f27"/><ellipse cx="132" cy="120" rx="5.5" ry="8.5" fill="#222f27"/>
+        </g>
+      </svg>
 
-            <div class="hero-actions fade-in" id="download">
-                <a href="javascript:void(0)" onclick="openDownloadModal()" class="btn-primary">Download Echo</a>
-                <p class="hero-note">Available for Android · No account required</p>
-            </div>
-        </div>
-    </section>
+      <h1>Wake up to a briefing <em>made just for you.</em></h1>
+      <p class="lede">Echo quietly gathers your notifications, messages and calendar through the day, then hands you a calm, spoken summary each morning — so you start the day informed without touching your phone.</p>
 
-    <section class="showcase">
-        <div class="phones-row">
-            <div class="phone-wrap fade-in" style="transition-delay: 0.1s;">
-                <div class="phone-frame">
-                    <img src="ai.jpeg" alt="Ask Echo Interface"
-                        onerror="this.src='https://via.placeholder.com/210x450/111/4caf6a?text=Ask+Echo'" />
-                </div>
-            </div>
-            <div class="phone-wrap fade-in" style="transition-delay: 0.2s;">
-                <div class="phone-frame">
-                    <img src="home.jpeg" alt="Echo Dashboard"
-                        onerror="this.src='https://via.placeholder.com/240x510/111/4caf6a?text=Home'" />
-                </div>
-            </div>
-            <div class="phone-wrap fade-in" style="transition-delay: 0.3s;">
-                <div class="phone-frame">
-                    <img src="brief.jpeg" alt="Morning Briefing Transcript"
-                        onerror="this.src='https://via.placeholder.com/210x450/111/4caf6a?text=Briefing'" />
-                </div>
-            </div>
-        </div>
-    </section>
+      <div class="cta-row" id="get">
+        <a class="gplay" href="#" aria-label="Get Echo on Google Play">
+          <svg width="26" height="28" viewBox="0 0 512 555" aria-hidden="true">
+            <path fill="#00D2FF" d="M23 15C15 24 11 38 11 55v445c0 17 4 31 12 40l1 1 249-249v-6L24 14z"/>
+            <path fill="#FFD500" d="M356 356l-83-83v-6l83-83 2 1 98 56c28 16 28 42 0 58l-98 56z"/>
+            <path fill="#FF3A44" d="M358 355l-85-85L23 520c9 10 25 11 42 1l293-166"/>
+            <path fill="#00E676" d="M358 185L65 19C48 9 32 10 23 20l250 250z"/>
+          </svg>
+          <span class="txt"><small>GET IT ON</small><b>Google Play</b></span>
+        </a>
+        <a class="btn btn-ghost" href="#briefing">See how it works</a>
+      </div>
+      <p class="fine">Free to start · No account required · Works fully offline. By installing you agree to our <a href="privacy.html">Privacy Policy</a>.</p>
 
-    <div class="stat-band fade-in">
-        <div class="stat-item">
-            <div class="stat-num">100+</div>
-            <div class="stat-label">Notifications captured daily</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-num">2 min</div>
-            <div class="stat-label">Morning briefing, not hours of scrolling</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-num">0</div>
-            <div class="stat-label">Interruptions while you focus</div>
-        </div>
+      <div class="trust-row">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z"/></svg> Private by default</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5v14" opacity="0"/><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg> No ads, no tracking</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="3" width="12" height="18" rx="3"/><path d="M11 18h2"/></svg> Runs on your device</span>
+      </div>
     </div>
+  </section>
 
-    <section class="features" id="features">
-        <div class="features-header fade-in">
-            <!-- <div class="section-label">What Echo does</div> -->
-            <h2 class="section-h2">A smarter relationship<br />with your phone</h2>
-            <p class="section-desc">Built to respect your attention. Echo works entirely in the background.</p>
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="wrap">
+      <div class="how-card reveal">
+        <div class="how-step">
+          <div class="n">01 — CAPTURES</div>
+          <h3>It listens</h3>
+          <p>Notifications, SMS and calendar events are collected quietly, all day.</p>
         </div>
-
-        <div class="feat-grid">
-
-            <div class="feat-card fade-in">
-                <div class="feat-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </div>
-                <h3>Scheduled Briefings</h3>
-                <p>Set once. Echo delivers a crisp audio summary every morning at exactly the time you choose, whether
-                    you open the app or not.</p>
-                <div class="briefing-preview">
-                    <div class="bp-time">Next Briefing in</div>
-                    <div class="bp-countdown">07:00 AM</div>
-                    <div class="bp-label">
-                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                        </svg> Play Today's Briefing
-                    </div>
-                </div>
-            </div>
-
-            <div class="feat-card fade-in">
-                <div class="feat-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                        <line x1="12" y1="19" x2="12" y2="23"></line>
-                        <line x1="8" y1="23" x2="16" y2="23"></line>
-                    </svg>
-                </div>
-                <h3>Ask Echo Anything</h3>
-                <p>Chat with your notifications. "Any meetings tonight?" "Did anyone message me about the deadline?"
-                    Echo knows — and answers.</p>
-                <div style="margin-top:24px; display:flex; gap:8px; align-items:center;">
-                    <div class="wave-bars">
-                        <div class="wave-bar" style="animation-delay:0s"></div>
-                        <div class="wave-bar" style="animation-delay:0.1s"></div>
-                        <div class="wave-bar" style="animation-delay:0.2s"></div>
-                        <div class="wave-bar" style="animation-delay:0.3s"></div>
-                        <div class="wave-bar" style="animation-delay:0.4s"></div>
-                        <div class="wave-bar" style="animation-delay:0.5s"></div>
-                        <div class="wave-bar" style="animation-delay:0.15s"></div>
-                        <div class="wave-bar" style="animation-delay:0.35s"></div>
-                    </div>
-                    <span style="font-size:0.85rem; color:var(--muted); margin-left:4px;">Ask Echo…</span>
-                </div>
-            </div>
-
-            <div class="feat-card wide fade-in">
-                <div class="feat-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                        <line x1="3" y1="15" x2="21" y2="15"></line>
-                    </svg>
-                </div>
-                <h3>The Vault — Everything, Organized</h3>
-                <p>Every notification is logged and searchable. Browse by app, category, or time. Nothing slips through.
-                </p>
-                <div class="vault-mini">
-                    <span class="vault-tag green">Google</span>
-                    <span class="vault-tag green">WhatsApp</span>
-                    <span class="vault-tag">Gmail</span>
-                    <span class="vault-tag">Calendar</span>
-                    <span class="vault-tag">Slack</span>
-                    <span class="vault-tag green">Twitter</span>
-                    <span class="vault-tag">YouTube</span>
-                    <span class="vault-tag">LinkedIn</span>
-                    <span class="vault-tag green">+89 more today</span>
-                </div>
-            </div>
-
-            <div class="feat-card fade-in">
-                <div class="feat-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <line x1="23" y1="9" x2="17" y2="15"></line>
-                        <line x1="17" y1="9" x2="23" y2="15"></line>
-                    </svg>
-                </div>
-                <h3>Silent by Design</h3>
-                <p>Echo captures in the background even when the app is closed. Your screen stays clear; your focus
-                    stays intact.</p>
-            </div>
-
-            <div class="feat-card fade-in">
-                <div class="feat-icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M12 20h9"></path>
-                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                    </svg>
-                </div>
-                <h3>Block & Rename</h3>
-                <p>Tell Echo to ignore noisy apps or rename them to something meaningful. Your vault, your rules.</p>
-            </div>
-
+        <div class="how-arrow" aria-hidden="true">→</div>
+        <div class="how-step">
+          <div class="n">02 — SYNTHESIZES</div>
+          <h3>It understands</h3>
+          <p>AI sorts the noise from the signal and writes a short, human summary.</p>
         </div>
-    </section>
-
-    <section class="ai-toggle-section" id="ai">
-        <!-- <div class="section-label fade-in">Your AI, Your Choice</div> -->
-        <h2 class="section-h2 fade-in">Cloud smart or<br /><em>offline private</em></h2>
-        <p class="section-desc fade-in">Echo lets you choose how your notifications are processed. Switch anytime — no
-            data lock-in.</p>
-
-        <div class="ai-cards fade-in">
-            <div class="ai-card active">
-                <div class="ai-icon cloud">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
-                    </svg>
-                </div>
-                <h3>Cloud AI</h3>
-                <p>Powered by frontier models. Richer summaries, smarter Q&A, and deeper contextual awareness.</p>
-                <div class="ai-pill-list">
-                    <div class="ai-pill">More nuanced, conversational answers</div>
-                    <div class="ai-pill">Handles complex multi-app context</div>
-                    <div class="ai-pill">Continuously improving models</div>
-                    <div class="ai-pill">Requires internet for processing</div>
-                </div>
-            </div>
-            <div class="ai-card">
-                <div class="ai-icon edge">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" viewBox="0 0 24 24">
-                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                    </svg>
-                </div>
-                <h3>On-Device AI</h3>
-                <p>Runs entirely on your phone. No data leaves your device. Fast, private, and works offline.</p>
-                <div class="ai-pill-list">
-                    <div class="ai-pill">100% private — nothing uploaded</div>
-                    <div class="ai-pill">Works without internet</div>
-                    <div class="ai-pill">Runs on the device's neural chip</div>
-                    <div class="ai-pill">Optimized for battery life</div>
-                </div>
-            </div>
+        <div class="how-arrow" aria-hidden="true">→</div>
+        <div class="how-step">
+          <div class="n">03 — SPEAKS</div>
+          <h3>It briefs you</h3>
+          <p>At the time you pick, Echo reads your day aloud in a voice you chose.</p>
         </div>
-    </section>
-
-    <section class="screenshots" id="screenshots">
-        <div class="screenshots-header fade-in">
-            <div class="section-label">In the wild</div>
-            <h2 class="section-h2">Designed for the<br />way you actually live</h2>
-        </div>
-
-        <div class="ss-grid">
-            <div class="ss-col">
-                <div class="ss-item">
-                    <img src="settings.jpeg" alt="Settings Interface"
-                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
-                </div>
-            </div>
-            <div class="ss-col">
-                <div class="ss-item">
-                    <img src="home.jpeg" alt="Echo Dashboard"
-                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
-                </div>
-            </div>
-            <div class="ss-col">
-                <div class="ss-item">
-                    <img src="ai.jpeg" alt="Morning Briefing Transcript"
-                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
-                </div>
-            </div>
-            <div class="ss-col">
-                <div class="ss-item">
-                    <img src="vault_sec.jpeg" alt="The Vault Notifications"
-                        onerror="this.src='https://via.placeholder.com/300x650/111/4caf6a'" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="cta-section">
-        <h2 class="fade-in">Stop scrolling.<br />Start <em>listening</em>.</h2>
-        <p class="fade-in">Download Echo and let it handle the noise while you handle what matters.</p>
-        <div class="hero-actions fade-in" style="margin-top: 32px;">
-            <a href="javascript:void(0)" onclick="openDownloadModal()" class="btn-primary">Download Echo</a>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-content">
-            <a href="#" class="footer-logo-container">
-                <img src="logo.png" alt="Echo Logo" class="footer-logo-img" onerror="this.style.display='none'">
-                <div class="footer-logo-text">Echo</div>
-            </a>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Support</a>
-            </div>
-            <p class="footer-copy">© 2026 Echo. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- ── DOWNLOAD MODAL ── -->
-    <div class="modal-overlay" id="downloadModal" onclick="closeDownloadModalOnOverlay(event)">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeDownloadModal()">×</button>
-            <div class="modal-title">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
-                Installing Echo
-            </div>
-            <div class="modal-steps">
-                <div class="modal-step">
-                    <div class="step-num">1</div>
-                    <div class="step-content">
-                        <h4>Download & Play Protect</h4>
-                        <p>When you download the file, Android may show a <strong>'Play Protect'</strong> warning. Tap
-                            <strong>'More details'</strong> and then <strong>'Install anyway'</strong> OR Go to play
-                            store -> profile -> play protect -> settings -> turn off.
-                        </p>
-                    </div>
-                </div>
-                <div class="modal-step">
-                    <div class="step-num">2</div>
-                    <div class="step-content">
-                        <h4>Enable Restricted Settings</h4>
-                        <p>After installation, open the app. If your phone blocks the Notification Access permission, go
-                            to <strong>Settings > Apps > Echo</strong>, tap the three-dot menu (<strong>⋮</strong>) in
-                            the top right, and select <strong>'Allow restricted settings'</strong>.</p>
-                    </div>
-                </div>
-                <div class="modal-step">
-                    <div class="step-num">3</div>
-                    <div class="step-content">
-                        <h4>Complete Setup</h4>
-                        <p>Return to the app to enable the final permissions.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <a href="https://drive.google.com/drive/folders/16ARlmi1jQfeSJIzxgc9KR_qaepR7KMLA?usp=sharing"
-                    target="_blank" class="btn-modal-primary" onclick="closeDownloadModal()">
-                    Proceed to Download
-                </a>
-            </div>
-        </div>
+      </div>
     </div>
+  </section>
 
-    <script>
-        // ── Floating notification pills ──
-        const notifs = [
-            "WhatsApp · 3 new messages",
-            "Gmail · Invoice received",
-            "Calendar · Meeting at 3 PM",
-            "Slack · @mentioned in #design",
-            "Google · 27° Bengaluru",
-            "Twitter · 12 new likes",
-            "YouTube · New video from channel",
-            "LinkedIn · 5 connection requests",
-            "Amazon · Your order shipped",
-            "Spotify · New release Friday",
-            "HCLTech · Pre-placement talk",
-            "AICTE · Activity points alert",
-        ];
+  <!-- FEATURE 1: Daily audio briefing -->
+  <section class="sec" id="briefing">
+    <div class="wrap">
+      <div class="feature">
+        <div class="f-text reveal">
+          <span class="eyebrow">The daily briefing</span>
+          <h2>Your whole day, in four calm minutes.</h2>
+          <p>No scrolling. No dozens of notifications to triage. Set a time — 7 AM, say — and Echo delivers one spoken briefing that ties together what actually happened: the meetings, the messages that mattered, the reminders you'd have missed.</p>
+          <ul class="f-list">
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> Wake up already caught up — before you've unlocked your phone.</li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> A live countdown shows exactly when your next briefing lands.</li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> Regenerate any time to fold in what just came in.</li>
+          </ul>
+        </div>
+        <div class="device glow reveal">
+          <div class="frame"><img src="screenshots/shot-home.png" width="390" height="844" alt="Echo home screen: the mascot, a 'Good morning, Chandan' greeting, a play button for today's four-minute briefing, and a countdown to the next 7:00 AM briefing."></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        const ticker = document.getElementById('ticker');
+  <!-- ENGINE CHOICE -->
+  <section class="sec" style="padding-top:0" id="engine">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Two brains, your choice</span>
+        <h2>On-device by default. Cloud when you want speed.</h2>
+        <p>Echo can think entirely on your phone with a compact local model — or, if you prefer, hand off to Google Gemini for faster results. You decide, and you can switch any time.</p>
+      </div>
+      <div class="engines">
+        <div class="engine local reveal">
+          <div class="tag">Recommended · fully private</div>
+          <h3>On-device engine</h3>
+          <p>A quantized Qwen2.5 1.5B model runs locally. No internet, no server, no cost — your data never leaves the phone.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Works completely offline</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Nothing transmitted, ever</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Free — no subscription</li>
+          </ul>
+        </div>
+        <div class="engine cloud reveal">
+          <div class="tag">Optional · faster</div>
+          <h3>Google Gemini engine</h3>
+          <p>Prefer snappier, richer responses? Opt into the cloud engine and Echo sends the relevant text to Gemini to generate your briefing.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Faster generation</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Off by default — you opt in</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Switch back anytime</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function spawnPill() {
-            if (!ticker) return;
-            const pill = document.createElement('div');
-            pill.className = 'notif-pill';
-            pill.innerHTML = `<span class="dot"></span>${notifs[Math.floor(Math.random() * notifs.length)]}`;
+  <!-- FEATURE 2: Ask Echo -->
+  <section class="sec" id="ask" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="feature rev">
+        <div class="f-text reveal">
+          <span class="eyebrow">Ask Echo</span>
+          <h2>Ask a question. Get a real answer.</h2>
+          <p>Everything Echo has captured is searchable in plain language. Type or speak — “What's on my schedule?”, “Any messages from work I missed?” — and Echo answers from your own history, showing exactly which notifications it drew from.</p>
+          <ul class="f-list">
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> Chat or full-screen voice mode — hands-free while you get ready.</li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> Every answer cites its sources so you can trust it.</li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> Grounded in your data — no made-up details.</li>
+          </ul>
+        </div>
+        <div class="device glow reveal">
+          <div class="frame"><img src="screenshots/shot-ask.png" width="390" height="844" alt="The Ask Echo chat screen: the user asks 'What's on my schedule today?' and Echo replies with a 10 AM standup and a 4:30 PM dentist appointment, citing three sources."></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            const x = 8 + Math.random() * 84;
-            const duration = 5 + Math.random() * 5;
-            const delay = Math.random() * 2;
-            const startY = 55 + Math.random() * 35;
+  <!-- FEATURE 3: Voice mode -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="feature">
+        <div class="f-text reveal">
+          <span class="eyebrow">Immersive voice</span>
+          <h2>A conversation, not a command line.</h2>
+          <p>Tap into voice mode and Echo becomes a full-screen, hands-free companion. Watch the sound sprite ripple as it listens, thinks and speaks — and see the exact notifications behind every reply, right there on screen.</p>
+          <ul class="f-list">
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> Speak naturally and interrupt any time.</li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> A living mascot reflects every state — listening, thinking, speaking.</li>
+            <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg></span> Expand the sources drawer to see what Echo used.</li>
+          </ul>
+        </div>
+        <div class="device glow reveal">
+          <div class="frame"><img src="screenshots/shot-voice.png" width="390" height="844" alt="Echo's immersive voice mode on a dark screen: the glowing mascot with expanding sound rings, a 'Speaking' label, and a drawer listing the three notifications used for the answer."></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            pill.style.left = x + '%';
-            pill.style.top = startY + '%';
-            pill.style.animationDuration = duration + 's';
-            pill.style.animationDelay = delay + 's';
+  <!-- FEATURE GRID: 6 features -->
+  <section class="sec" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Everything in Echo</span>
+        <h2>Small app. Big, calm day.</h2>
+        <p>A focused set of features designed to reduce the noise — not add to it.</p>
+      </div>
+      <div class="fgrid">
+        <div class="fcard reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10v4M8 6v12M12 3v18M16 6v12M20 10v4" stroke-linecap="round"/></svg></div>
+          <h3>Spoken briefings</h3>
+          <p>A short daily audio summary at the time you choose, read aloud by natural text-to-speech.</p>
+        </div>
+        <div class="fcard reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>Ask Echo</h3>
+          <p>A chat and voice assistant that answers questions about your day from your own captured history.</p>
+        </div>
+        <div class="fcard reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M12 3v9l7-4a9 9 0 0 0-7-5z"/></svg></div>
+          <h3>The Vault</h3>
+          <p>Browse and categorize every captured notification, with an interactive pie-chart breakdown of your day.</p>
+        </div>
+        <div class="fcard reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7z" stroke-linejoin="round"/></svg></div>
+          <h3>Streaks &amp; widgets</h3>
+          <p>A home-screen calendar widget, tap-to-play notifications and a streak that celebrates your daily habit.</p>
+        </div>
+        <div class="fcard reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke-linecap="round"/></svg></div>
+          <h3>Four voices, your accent</h3>
+          <p>Choose Aria, Sage, Atlas or Nova across multiple English accents, and set the speaking speed.</p>
+        </div>
+        <div class="fcard reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+          <h3>Private by design</h3>
+          <p>On-device processing, no third-party trackers, no ads. Your vault lives on your phone, under your control.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            ticker.appendChild(pill);
-            setTimeout(() => pill.remove(), (duration + delay + 1) * 1000);
-        }
+  <!-- VOICES -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Your voice</span>
+        <h2>Pick a voice that sounds like your morning.</h2>
+        <p>Four distinct personas across a range of English accents — with adjustable speed, so the briefing lands at your pace.</p>
+      </div>
+      <div class="voices">
+        <div class="voice reveal"><div class="ring" aria-hidden="true"></div><b>Aria</b><span>Warm · bright</span></div>
+        <div class="voice reveal"><div class="ring" aria-hidden="true"></div><b>Sage</b><span>Calm · measured</span></div>
+        <div class="voice reveal"><div class="ring" aria-hidden="true"></div><b>Atlas</b><span>Deep · steady</span></div>
+        <div class="voice reveal"><div class="ring" aria-hidden="true"></div><b>Nova</b><span>Crisp · lively</span></div>
+      </div>
+    </div>
+  </section>
 
-        // Spawn a batch on landing and stop shortly after
-        let spawnCount = 0;
-        const maxSpawns = 12;
-        for (let i = 0; i < 6; i++) spawnPill();
-        const intervalId = setInterval(() => {
-            spawnPill();
-            spawnCount++;
-            if (spawnCount >= maxSpawns) {
-                clearInterval(intervalId);
-            }
-        }, 1400);
+  <!-- SCREENSHOT SHOWCASE -->
+  <section class="sec" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">See it in motion</span>
+        <h2>Designed to feel calm in the hand.</h2>
+        <p>Warm, editorial, and quietly premium — the same care in every screen.</p>
+      </div>
+      <div class="shots">
+        <figure class="reveal">
+          <div class="device glow"><div class="frame"><img src="screenshots/shot-home.png" width="390" height="844" alt="Echo Today screen with the mascot, morning greeting, play-briefing button and countdown timer."></div></div>
+          <figcaption>Today<small>Your briefing &amp; countdown</small></figcaption>
+        </figure>
+        <figure class="reveal">
+          <div class="device glow"><div class="frame"><img src="screenshots/shot-ask.png" width="390" height="844" alt="Ask Echo chat conversation about the day's schedule with cited sources."></div></div>
+          <figcaption>Ask Echo<small>Chat with your day</small></figcaption>
+        </figure>
+        <figure class="reveal">
+          <div class="device glow"><div class="frame"><img src="screenshots/shot-voice.png" width="390" height="844" alt="Immersive voice mode with the glowing mascot and a drawer of source notifications."></div></div>
+          <figcaption>Voice mode<small>Hands-free &amp; immersive</small></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
 
-        // ── Download Modal Controls ──
-        function openDownloadModal() {
-            const modal = document.getElementById('downloadModal');
-            if (modal) modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+  <!-- PRIVACY BAND -->
+  <section class="sec" id="privacy">
+    <div class="wrap">
+      <div class="privacy reveal">
+        <svg class="rings" viewBox="0 0 240 240" aria-hidden="true"><g fill="none" stroke="#6EBC76" stroke-width="1.4"><circle cx="120" cy="120" r="60"/><circle cx="120" cy="120" r="90"/><circle cx="120" cy="120" r="118"/></g></svg>
+        <span class="eyebrow">Privacy first — not as an afterthought</span>
+        <h2>Your day is nobody's business but yours.</h2>
+        <p class="p-lede">Echo reads sensitive things — your messages, your calendar, your notifications. So we built it to keep them where they belong: on your phone. Nothing is sent anywhere unless you deliberately turn on the optional cloud engine.</p>
+        <div class="privacy-grid">
+          <div class="p-item">
+            <div class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="3" width="12" height="18" rx="3"/><path d="M10 18h4"/></svg></div>
+            <h3>Stays on-device</h3>
+            <p>By default, every briefing is generated locally with an on-phone model. No servers involved.</p>
+          </div>
+          <div class="p-item">
+            <div class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h-1V6a5 5 0 0 0-10 0"/><rect x="4" y="8" width="16" height="12" rx="3"/></svg></div>
+            <h3>No ads, no tracking</h3>
+            <p>No advertising SDKs and no third-party analytics profiling you. Your data isn't the product.</p>
+          </div>
+          <div class="p-item">
+            <div class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14"/></svg></div>
+            <h3>You're in control</h3>
+            <p>Your captured history lives in a local vault you can browse — and clear whenever you like.</p>
+          </div>
+        </div>
+        <div style="margin-top:30px">
+          <a class="btn btn-ghost" href="privacy.html" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)">Read the full privacy policy →</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function closeDownloadModal() {
-            const modal = document.getElementById('downloadModal');
-            if (modal) modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+  <!-- FINAL CTA -->
+  <section class="final">
+    <div class="wrap">
+      <div class="box reveal">
+        <svg class="rings" viewBox="0 0 240 240" aria-hidden="true"><g fill="none" stroke="#6EBC76" stroke-width="1.4"><circle cx="120" cy="120" r="60"/><circle cx="120" cy="120" r="90"/><circle cx="120" cy="120" r="118"/></g></svg>
+        <svg class="orb float-orb" viewBox="0 0 240 240" role="img" aria-label="Echo mascot">
+          <g fill="none" stroke="url(#g-sheen)" filter="url(#g-soft2)">
+            <circle cx="120" cy="120" r="72" stroke-width="11" opacity=".7"/>
+            <circle cx="120" cy="120" r="90" stroke-width="11" opacity=".4"/>
+          </g>
+          <g class="orb-core">
+            <circle cx="120" cy="122" r="98" fill="url(#g-glow)" filter="url(#g-soft)"/>
+            <circle cx="120" cy="120" r="56" fill="url(#g-orb)"/><circle cx="120" cy="120" r="56" fill="url(#g-bs)"/>
+            <ellipse cx="100" cy="94" rx="24" ry="15" fill="url(#g-spec)" filter="url(#g-soft2)" transform="rotate(-24 100 94)"/>
+            <ellipse cx="108" cy="120" rx="5.5" ry="8.5" fill="#222f27"/><ellipse cx="132" cy="120" rx="5.5" ry="8.5" fill="#222f27"/>
+          </g>
+        </svg>
+        <h2>Start every morning a step ahead.</h2>
+        <p>Install Echo and set your first briefing in under a minute. Free, private, and quietly yours.</p>
+        <div class="cta-row">
+          <a class="gplay" href="#" aria-label="Get Echo on Google Play">
+            <svg width="26" height="28" viewBox="0 0 512 555" aria-hidden="true">
+              <path fill="#00D2FF" d="M23 15C15 24 11 38 11 55v445c0 17 4 31 12 40l1 1 249-249v-6L24 14z"/>
+              <path fill="#FFD500" d="M356 356l-83-83v-6l83-83 2 1 98 56c28 16 28 42 0 58l-98 56z"/>
+              <path fill="#FF3A44" d="M358 355l-85-85L23 520c9 10 25 11 42 1l293-166"/>
+              <path fill="#00E676" d="M358 185L65 19C48 9 32 10 23 20l250 250z"/>
+            </svg>
+            <span class="txt"><small>GET IT ON</small><b>Google Play</b></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function closeDownloadModalOnOverlay(event) {
-            if (event.target.id === 'downloadModal') {
-                closeDownloadModal();
-            }
-        }
+</main>
 
-        // ── Scroll fade-in ──
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    e.target.classList.add('visible');
-                    observer.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.12 });
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="#top" aria-label="Echo home">
+          <svg viewBox="0 0 240 240" aria-hidden="true">
+            <circle cx="120" cy="120" r="88" fill="url(#g-glow)" filter="url(#g-soft)"/>
+            <circle cx="120" cy="120" r="56" fill="url(#g-orb)"/><circle cx="120" cy="120" r="56" fill="url(#g-bs)"/>
+            <ellipse cx="100" cy="94" rx="24" ry="15" fill="url(#g-spec)" filter="url(#g-soft2)" transform="rotate(-24 100 94)"/>
+            <ellipse cx="108" cy="120" rx="5.5" ry="8.5" fill="#222f27"/><ellipse cx="132" cy="120" rx="5.5" ry="8.5" fill="#222f27"/>
+          </svg>
+          Echo
+        </a>
+        <p>Echo, the sound sprite — a calm daily briefing that captures your notifications, messages and calendar and reads your day aloud. Private by default.</p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>Product</h4>
+          <a href="#briefing">Daily briefing</a>
+          <a href="#ask">Ask Echo</a>
+          <a href="#engine">On-device AI</a>
+          <a href="#get">Get the app</a>
+        </div>
+        <div class="foot-col">
+          <h4>Trust</h4>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="privacy.html#data">Data we access</a>
+          <a href="privacy.html#deletion">Delete your data</a>
+          <a href="mailto:privacy@echo.app">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Echo. All rights reserved.</span>
+      <span>Made calmly. Google Play and the Google Play logo are trademarks of Google LLC.</span>
+    </div>
+  </div>
+</footer>
 
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    </script>
+<script>
+  // Scroll reveal — progressive enhancement only
+  (function(){
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if(reduce || !('IntersectionObserver' in window)){
+      els.forEach(function(e){ e.classList.add('in'); e.style.opacity=1; });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  })();
+</script>
 </body>
-
 </html>

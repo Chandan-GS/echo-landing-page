@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="Echo mascot">
+  <defs>
+    <radialGradient id="em-orb" cx="45%" cy="57%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="30%" stop-color="#F4F9F0"/>
+      <stop offset="60%" stop-color="#D9E8DB"/>
+      <stop offset="84%" stop-color="#B4D1BA"/>
+      <stop offset="100%" stop-color="#9EC0A6"/>
+    </radialGradient>
+    <radialGradient id="em-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D6EBDA" stop-opacity=".9"/>
+      <stop offset="100%" stop-color="#D6EBDA" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="em-spec" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="em-bs" cx="50%" cy="80%" r="55%">
+      <stop offset="0%" stop-color="#5E8568" stop-opacity="0"/>
+      <stop offset="72%" stop-color="#5E8568" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#5E8568" stop-opacity=".3"/>
+    </radialGradient>
+    <linearGradient id="em-sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff" stop-opacity=".92"/>
+      <stop offset="46%" stop-color="#D8EADC" stop-opacity=".6"/>
+      <stop offset="100%" stop-color="#98BEA2" stop-opacity=".3"/>
+    </linearGradient>
+    <filter id="em-soft" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="em-soft2" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="1.8"/></filter>
+  </defs>
+  <circle cx="120" cy="122" r="98" fill="url(#em-glow)" filter="url(#em-soft)"/>
+  <g fill="none" stroke="url(#em-sheen)" filter="url(#em-soft2)">
+    <circle cx="120" cy="120" r="72" stroke-width="11" opacity=".8"/>
+    <circle cx="120" cy="120" r="88" stroke-width="11" opacity=".5"/>
+    <circle cx="120" cy="120" r="104" stroke-width="11" opacity=".3"/>
+  </g>
+  <circle cx="120" cy="120" r="56" fill="url(#em-orb)"/>
+  <circle cx="120" cy="120" r="56" fill="url(#em-bs)"/>
+  <ellipse cx="100" cy="94" rx="24" ry="15" fill="url(#em-spec)" filter="url(#em-soft2)" transform="rotate(-24 100 94)"/>
+  <circle cx="98" cy="90" r="5" fill="#fff" opacity=".95" filter="url(#em-soft2)"/>
+  <ellipse cx="108" cy="120" rx="5.5" ry="8.5" fill="#222f27"/>
+  <ellipse cx="132" cy="120" rx="5.5" ry="8.5" fill="#222f27"/>
+</svg>

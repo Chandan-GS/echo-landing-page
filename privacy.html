@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy Policy — Echo</title>
+<meta name="description" content="How Echo handles your data: notifications, SMS and calendar are processed on-device by default, nothing is transmitted unless you enable the optional cloud engine. No ads, no third-party tracking.">
+<meta name="theme-color" content="#F4F2EE">
+<meta name="robots" content="index,follow">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Echo">
+<meta property="og:title" content="Privacy Policy — Echo">
+<meta property="og:description" content="Echo processes your notifications, SMS and calendar on-device by default. Nothing leaves your phone unless you opt into the cloud engine. No ads, no third-party tracking.">
+<meta property="og:image" content="https://echo.app/og-image.png">
+<meta property="og:url" content="https://echo.app/privacy.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://echo.app/og-image.png">
+
+<link rel="icon" type="image/png" sizes="256x256" href="favicon-256.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="favicon-256.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F4F2EE; --surface:#FBFAF7; --green:#49884F; --green-deep:#3B6E40; --green-bright:#6EBC76;
+    --accent:#D1E6D3; --ink:#1E1E1E; --ink-2:#5A5A5A; --hair:#E6E0D3; --char:#141810;
+    --serif:'Old Standard TT',Georgia,serif; --sans:'Nunito',system-ui,-apple-system,sans-serif;
+    --wrap:820px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.68;
+    overflow-x:hidden;font-size:17px;-webkit-font-smoothing:antialiased}
+  a{color:var(--green);text-decoration:underline;text-underline-offset:2px;font-weight:600}
+  a:hover{color:var(--green-deep)}
+  svg{max-width:100%;display:block}
+  h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.15;letter-spacing:-.4px}
+  :focus-visible{outline:3px solid var(--green);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px;width:100%}
+
+  header.nav{position:sticky;top:0;z-index:20;backdrop-filter:saturate(1.2) blur(12px);
+    background:rgba(244,242,238,.85);border-bottom:1px solid rgba(230,224,211,.7)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:var(--wrap);margin:0 auto;padding:0 22px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:21px;color:var(--ink);text-decoration:none}
+  .brand svg{width:34px;height:34px}
+  .back{font-weight:700;font-size:14.5px;color:var(--ink-2);text-decoration:none}
+  .back:hover{color:var(--green)}
+
+  .hero{padding:56px 0 30px;text-align:center;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(60% 60% at 50% 0%, rgba(174,207,180,.4), rgba(244,242,238,0) 70%)}
+  .hero .eyebrow{font-size:12.5px;letter-spacing:2.6px;font-weight:800;text-transform:uppercase;color:var(--green)}
+  .hero h1{font-size:clamp(34px,7vw,52px);letter-spacing:-1px;margin:14px 0 10px}
+  .hero .dates{font-size:14.5px;color:var(--ink-2);font-weight:700}
+  .hero .intro{max-width:640px;margin:22px auto 0;color:var(--ink-2);font-size:18px}
+
+  /* summary card */
+  .tldr{background:var(--char);color:#EFEFEF;border-radius:26px;padding:30px 30px;margin:30px auto 0;
+    max-width:var(--wrap);box-shadow:0 18px 46px rgba(20,28,18,.16)}
+  .tldr h2{font-size:20px;color:#fff;margin-bottom:6px}
+  .tldr p{color:#AFC0AC;font-size:15px;margin-bottom:16px}
+  .tldr ul{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;list-style:none}
+  .tldr li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:#DDEAD9;font-weight:600}
+  .tldr li svg{width:18px;height:18px;flex:0 0 auto;margin-top:2px;color:#8FD69B}
+  @media(max-width:640px){ .tldr ul{grid-template-columns:1fr} }
+
+  main{padding:20px 0 60px}
+  .toc{background:var(--surface);border:1px solid var(--hair);border-radius:20px;padding:22px 26px;margin:34px 0}
+  .toc h2{font-size:13px;letter-spacing:1.6px;text-transform:uppercase;color:#8a8474;font-weight:800;margin-bottom:12px;font-family:var(--sans)}
+  .toc ol{margin-left:20px;columns:2;column-gap:34px}
+  .toc li{font-size:15px;margin-bottom:7px;break-inside:avoid}
+  @media(max-width:600px){ .toc ol{columns:1} }
+
+  section.doc{margin-top:40px;scroll-margin-top:84px}
+  section.doc h2{font-size:26px;letter-spacing:-.5px;padding-bottom:8px;border-bottom:2px solid var(--hair);margin-bottom:18px}
+  section.doc h3{font-size:19px;margin:24px 0 8px;color:#2b3329}
+  section.doc p{color:#33372f;margin-bottom:14px}
+  section.doc ul{margin:0 0 16px 22px}
+  section.doc li{margin-bottom:9px;color:#33372f}
+  section.doc strong{color:var(--ink);font-weight:800}
+  .note{background:var(--surface);border-left:4px solid var(--green);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:15.5px;color:#33372f}
+  .perm{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:18px 22px;margin:14px 0}
+  .perm .k{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;font-weight:800;color:var(--green)}
+  .perm h3{margin:6px 0 6px;font-size:18px}
+  .perm p{margin-bottom:0;font-size:15px}
+
+  footer{border-top:1px solid var(--hair);padding:40px 0;margin-top:40px}
+  .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--ink-2)}
+  .foot a{color:var(--ink-2)} .foot a:hover{color:var(--green)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <radialGradient id="g-orb" cx="45%" cy="57%" r="60%">
+    <stop offset="0%" stop-color="#FFFFFF"/><stop offset="30%" stop-color="#F4F9F0"/>
+    <stop offset="60%" stop-color="#D9E8DB"/><stop offset="84%" stop-color="#B4D1BA"/><stop offset="100%" stop-color="#9EC0A6"/>
+  </radialGradient>
+  <radialGradient id="g-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#D6EBDA" stop-opacity=".9"/><stop offset="100%" stop-color="#D6EBDA" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-spec" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff" stop-opacity="1"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="g-bs" cx="50%" cy="80%" r="55%"><stop offset="0%" stop-color="#5E8568" stop-opacity="0"/><stop offset="72%" stop-color="#5E8568" stop-opacity="0"/><stop offset="100%" stop-color="#5E8568" stop-opacity=".3"/></radialGradient>
+  <linearGradient id="g-sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity=".92"/><stop offset="46%" stop-color="#D8EADC" stop-opacity=".6"/><stop offset="100%" stop-color="#98BEA2" stop-opacity=".3"/></linearGradient>
+  <filter id="g-soft" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="g-soft2" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="1.8"/></filter>
+</defs></svg>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Echo home">
+      <svg viewBox="0 0 240 240" aria-hidden="true">
+        <circle cx="120" cy="120" r="88" fill="url(#g-glow)" filter="url(#g-soft)"/>
+        <circle cx="120" cy="120" r="56" fill="url(#g-orb)"/><circle cx="120" cy="120" r="56" fill="url(#g-bs)"/>
+        <ellipse cx="100" cy="94" rx="24" ry="15" fill="url(#g-spec)" filter="url(#g-soft2)" transform="rotate(-24 100 94)"/>
+        <ellipse cx="108" cy="120" rx="5.5" ry="8.5" fill="#222f27"/><ellipse cx="132" cy="120" rx="5.5" ry="8.5" fill="#222f27"/>
+      </svg>
+      Echo
+    </a>
+    <a class="back" href="index.html">← Back to Echo</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="eyebrow">Legal</div>
+    <h1>Privacy Policy</h1>
+    <p class="dates">Effective date: 13 September 2026 · Last updated: 13 September 2026</p>
+    <p class="intro">Echo is a privacy-first personal briefing app. This policy explains, in plain language, what data Echo accesses, why it needs it, where that data is processed, and the control you have over it.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="tldr">
+    <h2>The short version</h2>
+    <p>You don't have to read the whole thing to trust it. Here's the essence:</p>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Your notifications, SMS and calendar are read to build your briefing.</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> By default, everything is processed on your device.</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Nothing is sent off your phone unless you enable the optional Gemini engine.</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> No ads, and no third-party analytics or advertising trackers.</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Your captured history lives in a local vault you can clear any time.</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-11"/></svg> Uninstalling Echo removes its data from your device.</li>
+    </ul>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <nav class="toc" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#who">Who we are</a></li>
+      <li><a href="#data">Data Echo accesses &amp; why</a></li>
+      <li><a href="#processing">On-device processing by default</a></li>
+      <li><a href="#cloud">The optional cloud engine</a></li>
+      <li><a href="#permissions">Permissions we request</a></li>
+      <li><a href="#storage">Local storage &amp; the Vault</a></li>
+      <li><a href="#sharing">Sharing &amp; third parties</a></li>
+      <li><a href="#ads">Advertising &amp; analytics</a></li>
+      <li><a href="#retention">Retention &amp; deletion</a></li>
+      <li><a href="#children">Children's privacy</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#rights">Your rights</a></li>
+      <li><a href="#changes">Changes to this policy</a></li>
+      <li><a href="#contact">Contact us</a></li>
+    </ol>
+  </nav>
+
+  <section class="doc" id="who">
+    <h2>1. Who we are</h2>
+    <p>Echo ("Echo", "the app", "we", "us") is a personal briefing application for mobile devices. Echo captures information already present on your device — your notifications, text messages and calendar — and synthesizes it into a short, personalized spoken briefing, along with an assistant ("Ask Echo") that answers questions about that information.</p>
+    <p>This policy applies to the Echo mobile app. It does not apply to third-party services you may separately choose to use (for example, Google Gemini, if you enable the optional cloud engine described below).</p>
+  </section>
+
+  <section class="doc" id="data">
+    <h2>2. What data Echo accesses, and why</h2>
+    <p>Echo is designed to read only what it needs to produce your briefing and to answer your questions. Specifically:</p>
+
+    <h3>Notifications</h3>
+    <p>With your permission (the Android notification-listener permission), Echo reads the notifications that arrive on your device — for example the sending app, title, text and timestamp. This is the core of your briefing: it lets Echo tell you what happened across your apps without you having to open each one.</p>
+
+    <h3>SMS / text messages</h3>
+    <p>If you grant SMS access, Echo reads incoming text messages so it can include relevant messages in your briefing and answer questions such as "any messages I missed?". Echo does not send text messages on your behalf.</p>
+
+    <h3>Calendar</h3>
+    <p>If you grant calendar access, Echo reads your upcoming events — titles, times and locations — so your briefing can tell you what's on your schedule and Ask Echo can answer questions about it.</p>
+
+    <h3>Microphone (voice)</h3>
+    <p>When you use Ask Echo in voice mode, Echo uses your microphone to capture your spoken question so it can be transcribed to text. The microphone is only active while you are using voice mode.</p>
+
+    <div class="note"><strong>We collect only what serves you.</strong> Echo does not read data unrelated to briefings — it does not access your photos, contacts list, files, location, or browsing history to build its features.</div>
+  </section>
+
+  <section class="doc" id="processing">
+    <h2>3. On-device processing by default</h2>
+    <p>By default, Echo processes everything <strong>locally on your device</strong>. The app includes a compact, quantized on-device language model (Qwen2.5 1.5B) that reads your captured notifications, messages and calendar and generates your briefing entirely on the phone.</p>
+    <p>In this default mode:</p>
+    <ul>
+      <li>Your notification, SMS and calendar content is <strong>not transmitted to us or to any third party</strong>.</li>
+      <li>Echo does not require an internet connection to generate a briefing or to answer questions.</li>
+      <li>We do not receive, see, or store your personal content on any server, because there is no server involved.</li>
+    </ul>
+    <p>Text-to-speech (reading your briefing aloud) is performed using the speech capabilities available on your device.</p>
+  </section>
+
+  <section class="doc" id="cloud">
+    <h2>4. The optional cloud engine (Google Gemini)</h2>
+    <p>Some people prefer faster, richer responses. For that reason Echo offers an <strong>optional</strong> cloud engine powered by Google Gemini. This engine is <strong>turned off by default</strong>. It is used only if you deliberately enable it in Settings.</p>
+    <p>When — and only when — you enable the cloud engine:</p>
+    <ul>
+      <li>The relevant text needed to generate your briefing or answer your question (for example, the notification, message or calendar text being summarized, and your typed or transcribed prompt) is sent to Google's Gemini API over an encrypted connection.</li>
+      <li>That text is processed by Google to return a generated response, which Echo then shows or reads to you.</li>
+      <li>Google's handling of that data is governed by Google's own terms and privacy policy for the Gemini API. We encourage you to review them before enabling the cloud engine.</li>
+    </ul>
+    <p>You can switch back to the fully on-device engine at any time. When the cloud engine is off, none of your content is sent to Gemini.</p>
+    <div class="note">You are always in control of which engine is active, and Echo makes the current choice clear in the app.</div>
+  </section>
+
+  <section class="doc" id="permissions">
+    <h2>5. Permissions we request</h2>
+    <p>Echo asks only for the permissions its features require. You can decline any of them; the related feature will simply be unavailable. You can also change these permissions at any time in your device's system settings.</p>
+
+    <div class="perm">
+      <div class="k">Notification access</div>
+      <h3>Notification listener</h3>
+      <p>Lets Echo read incoming notifications so it can include them in your briefing and in Ask Echo. This is the app's central function.</p>
+    </div>
+    <div class="perm">
+      <div class="k">SMS</div>
+      <h3>Read text messages</h3>
+      <p>Lets Echo include relevant messages in your briefing and answer questions about them. Optional.</p>
+    </div>
+    <div class="perm">
+      <div class="k">Calendar</div>
+      <h3>Read calendar events</h3>
+      <p>Lets Echo tell you what's on your schedule. Optional.</p>
+    </div>
+    <div class="perm">
+      <div class="k">Microphone</div>
+      <h3>Voice input</h3>
+      <p>Used only during Ask Echo voice sessions, to capture and transcribe your spoken question.</p>
+    </div>
+    <div class="perm">
+      <div class="k">Notifications / Alarms</div>
+      <h3>Deliver your briefing on time</h3>
+      <p>Lets Echo post the tap-to-play notification and run at your chosen briefing time.</p>
+    </div>
+    <div class="perm">
+      <div class="k">Internet</div>
+      <h3>Network access</h3>
+      <p>Used only if you enable the optional cloud engine. The on-device engine works without it.</p>
+    </div>
+  </section>
+
+  <section class="doc" id="storage">
+    <h2>6. Local storage and the Vault</h2>
+    <p>To build briefings and let you look back over your day, Echo keeps a history of captured notifications in a local store on your device called the <strong>Vault</strong>. Your app settings — such as your chosen briefing time, voice persona and speaking speed — are also stored locally.</p>
+    <ul>
+      <li>This data is stored on your device, within Echo's private app storage.</li>
+      <li>You can browse and categorize items in the Vault, and clear them whenever you want.</li>
+      <li>You can configure Echo to automatically delete older captured items after a period you choose.</li>
+    </ul>
+  </section>
+
+  <section class="doc" id="sharing">
+    <h2>7. Sharing and third parties</h2>
+    <p>We do not sell your personal information, and we do not share your notification, message or calendar content with third parties for their own purposes.</p>
+    <p>The only circumstance in which your content leaves your device is the <a href="#cloud">optional cloud engine</a> you choose to enable, in which case the relevant text is sent to Google's Gemini API solely to generate your response. Aside from that, Echo does not transmit your personal content to any external service.</p>
+  </section>
+
+  <section class="doc" id="ads">
+    <h2>8. Advertising and analytics</h2>
+    <p>Echo contains <strong>no advertising</strong>. We do not show ads and we do not integrate third-party advertising networks.</p>
+    <p>Echo does not use third-party analytics or tracking SDKs to build a profile of you or to follow you across other apps and websites. We do not sell or share your data with data brokers.</p>
+    <p>If we ever introduce limited, privacy-respecting diagnostics to keep the app stable (for example, anonymous crash reports), we will update this policy first, describe exactly what is collected, and — where required — ask for your consent. As of the effective date above, Echo does not include such tools.</p>
+  </section>
+
+  <section class="doc" id="retention">
+    <h2>9. Data retention and deletion</h2>
+    <p>Because your content stays on your device by default, you control its lifetime:</p>
+    <ul>
+      <li><strong>Clear it yourself:</strong> you can delete individual Vault items or clear the entire Vault from within Echo at any time.</li>
+      <li id="deletion"><strong>Automatic clean-up:</strong> Echo can automatically remove captured items older than a period you set.</li>
+      <li><strong>Uninstall:</strong> removing Echo deletes the app's locally stored data, including the Vault and your settings, from your device.</li>
+    </ul>
+    <p>If you use the optional cloud engine, the text sent for a given request is processed by Google to return a response; its retention by Google is governed by Google's terms for the Gemini API. Echo itself does not keep a copy of your content on any server.</p>
+  </section>
+
+  <section class="doc" id="children">
+    <h2>10. Children's privacy</h2>
+    <p>Echo is intended for a general audience and is not directed to children under the age of 13 (or the minimum age required in your jurisdiction). We do not knowingly collect personal information from children. If you believe a child has used Echo in a way that raises a concern, please contact us and we will help address it.</p>
+  </section>
+
+  <section class="doc" id="security">
+    <h2>11. Security</h2>
+    <p>We take reasonable measures to protect your information. Keeping processing on-device by default is itself a strong safeguard: data that never leaves your phone can't be intercepted in transit or exposed by a server breach. When you use the optional cloud engine, requests are sent over an encrypted connection. Your device's own security (screen lock, OS protections) also helps keep the local Vault safe. No method of storage or transmission is completely secure, but we design Echo to minimize what is exposed in the first place.</p>
+  </section>
+
+  <section class="doc" id="rights">
+    <h2>12. Your rights and choices</h2>
+    <p>You are in control of Echo at all times. You can:</p>
+    <ul>
+      <li>Grant or revoke any permission from your device settings.</li>
+      <li>Choose the on-device engine so that no content leaves your phone.</li>
+      <li>View, categorize and delete your captured history in the Vault.</li>
+      <li>Uninstall Echo to remove its local data from your device.</li>
+    </ul>
+    <p>Depending on where you live, you may have additional rights under laws such as the GDPR or CCPA (for example, to access or delete personal data). Because Echo keeps your content on your device rather than on our servers, you can exercise the core of these rights directly in the app. For any request you can't fulfil yourself, contact us using the details below.</p>
+  </section>
+
+  <section class="doc" id="changes">
+    <h2>13. Changes to this policy</h2>
+    <p>We may update this Privacy Policy from time to time — for example, if we add a feature or change how data is handled. When we do, we will revise the "Last updated" date at the top of this page, and for significant changes we will provide a more prominent notice within the app. Your continued use of Echo after an update means you accept the revised policy.</p>
+  </section>
+
+  <section class="doc" id="contact">
+    <h2>14. Contact us</h2>
+    <p>If you have any questions about this policy or about how Echo handles your data, please reach out:</p>
+    <p><strong>Email:</strong> <a href="mailto:privacy@echo.app">privacy@echo.app</a></p>
+    <p>We aim to respond to privacy inquiries promptly.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 Echo. All rights reserved.</span>
+    <span><a href="index.html">Home</a> · <a href="privacy.html">Privacy Policy</a> · <a href="mailto:privacy@echo.app">Contact</a></span>
+  </div>
+</footer>
+</body>
+</html>
