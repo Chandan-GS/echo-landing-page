@@ -1352,11 +1352,6 @@ svg[data-phase='speaking'] .m-mouth {
 .m-glow-c {
   transition: opacity 0.7s ease;
 }
-.think-arc {
-  transition: opacity 0.5s ease;
-  transform-origin: 120px 120px;
-  animation: arcSpin 2.6s linear infinite;
-}
 svg[data-phase='speaking'] .orb-core {
   animation: floaty 1.5s ease-in-out infinite;
 }
@@ -1373,9 +1368,6 @@ svg[data-phase='speaking'] .orb-core {
 @keyframes talk {
   from { transform: scaleY(0.35); }
   to { transform: scaleY(1.15); }
-}
-@keyframes arcSpin {
-  to { transform: rotate(360deg); }
 }
 
 @keyframes floatUp {

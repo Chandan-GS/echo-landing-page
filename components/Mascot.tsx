@@ -73,17 +73,6 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
         opacity={phase === 'speaking' ? 1 : phase === 'listening' ? 0.85 : 0.7}
       />
 
-      {/* thinking arc — a short comet that orbits while Echo thinks */}
-      <g className="think-arc" style={{ opacity: phase === 'thinking' ? 0.7 : 0 }}>
-        <path
-          d="M120 50 A 70 70 0 0 1 190 120"
-          fill="none"
-          stroke="#8FE0A6"
-          strokeWidth="3.4"
-          strokeLinecap="round"
-        />
-      </g>
-
       <g className="orb-core">
         <circle cx="120" cy="120" r="60" fill="url(#m-orb)" />
         <circle cx="120" cy="120" r="60" fill="url(#m-shade)" />
