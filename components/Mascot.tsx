@@ -8,8 +8,15 @@ import { useEffect, useState } from 'react';
  * thinking → speaking), crossfading its eyes, a thinking arc, and its glow so
  * it reads as alive. All motion is disabled under prefers-reduced-motion.
  */
-const PHASES = ['idle', 'listening', 'thinking', 'speaking'] as const;
-type Phase = (typeof PHASES)[number];
+type Phase = 'idle' | 'listening' | 'thinking' | 'speaking';
+// Per-phase dwell times give a natural, unforced rhythm; the sequence repeats
+// forever, and every transition is a CSS crossfade, so the loop never jumps.
+const CYCLE: { name: Phase; dur: number }[] = [
+  { name: 'idle', dur: 2600 },
+  { name: 'listening', dur: 2200 },
+  { name: 'thinking', dur: 3000 },
+  { name: 'speaking', dur: 3400 },
+];
 
 export default function Mascot({ className = 'hero-mascot float-orb' }: { className?: string }) {
   const [phase, setPhase] = useState<Phase>('idle');
@@ -17,11 +24,14 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
   useEffect(() => {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     let i = 0;
-    const id = window.setInterval(() => {
-      i = (i + 1) % PHASES.length;
-      setPhase(PHASES[i]);
-    }, 2600);
-    return () => window.clearInterval(id);
+    let timer: number;
+    const next = () => {
+      i = (i + 1) % CYCLE.length;
+      setPhase(CYCLE[i].name);
+      timer = window.setTimeout(next, CYCLE[i].dur);
+    };
+    timer = window.setTimeout(next, CYCLE[0].dur);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const happy = phase === 'thinking' || phase === 'speaking';
@@ -81,6 +91,11 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
 
         {/* the face tilts/perks up per phase for personality */}
         <g className="m-face">
+          {/* blush cheeks warm up when Echo is content (thinking/speaking) */}
+          <g className="m-cheeks" style={{ opacity: happy ? 0.5 : 0 }}>
+            <circle cx="98" cy="132" r="5.5" fill="#F2A399" />
+            <circle cx="142" cy="132" r="5.5" fill="#F2A399" />
+          </g>
           {/* eyes crossfade between open (idle/listening) and content (thinking/speaking) */}
           <g className="m-eyes">
             <g className="eyes-open" style={{ opacity: happy ? 0 : 1 }}>

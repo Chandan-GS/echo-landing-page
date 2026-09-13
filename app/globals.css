@@ -1322,13 +1322,16 @@
   transform-origin: 120px 122px;
 }
 svg[data-phase='listening'] .m-face {
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-3px) scale(1.04) rotate(2deg);
 }
 svg[data-phase='thinking'] .m-face {
-  transform: translate(-3px, -5px) rotate(-5deg);
+  transform: translate(-5px, -6px) rotate(-6deg);
 }
 svg[data-phase='speaking'] .m-face {
-  transform: translateY(1px);
+  transform: translateY(1px) rotate(1.5deg);
+}
+.m-cheeks {
+  transition: opacity 0.45s ease;
 }
 .m-eyes {
   animation: blink 4.6s ease-in-out infinite;
@@ -1352,8 +1355,14 @@ svg[data-phase='speaking'] .m-mouth {
 .m-glow-c {
   transition: opacity 0.7s ease;
 }
-svg[data-phase='speaking'] .orb-core {
-  animation: floaty 1.5s ease-in-out infinite;
+/* gentle continuous sway of the whole orb — always looping, never restarts */
+.float-orb {
+  animation: sway 7s ease-in-out infinite;
+  transform-origin: 50% 58%;
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
 }
 @keyframes blink {
   0%, 90%, 100% { transform: scaleY(1); }
@@ -1381,8 +1390,8 @@ svg[data-phase='speaking'] .orb-core {
   50% { height: 20px; }
 }
 @keyframes floaty {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-9px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-9px) scale(1.02); }
 }
 @keyframes ripple {
   0% { transform: scale(0.78); opacity: 0.22; }
@@ -1502,10 +1511,11 @@ svg[data-phase='speaking'] .orb-core {
   .notif-pill,
   .wave-bar,
   .hero-glow,
+  .float-orb,
   .float-orb .orb-core,
-  .float-orb .ring-a,
-  .float-orb .ring-b,
-  .float-orb .ring-c {
+  .m-eyes,
+  .eyes-open,
+  .m-mouth {
     animation: none !important;
   }
 }
