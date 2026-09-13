@@ -6,7 +6,6 @@ export default function Problem() {
       <div className="wrap section">
         <div className="problem-inner">
           <Reveal>
-            <span className="eyebrow">The problem</span>
             <h2>Your phone buzzed 100+ times today. You read maybe ten of them.</h2>
             <p>
               Notifications pile up faster than anyone can triage. The one message that mattered gets

@@ -27,7 +27,6 @@ export default function HowItWorks() {
     <section className="section" id="how">
       <div className="wrap">
         <Reveal className="section-head center">
-          <span className="eyebrow">How it works</span>
           <h2 className="section-h2">Set it once. It runs every day.</h2>
         </Reveal>
         <div className="steps">

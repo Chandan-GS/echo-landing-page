@@ -29,7 +29,6 @@ export default function FAQ() {
     <section className="section" id="faq">
       <div className="wrap">
         <Reveal className="section-head center">
-          <span className="eyebrow">Good to know</span>
           <h2 className="section-h2">Questions, answered</h2>
         </Reveal>
         <div className="faq-list">

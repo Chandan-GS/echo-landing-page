@@ -9,7 +9,6 @@ export default function PrivacyBand() {
       <div className="wrap">
         <Reveal className="privacy-band">
           <DecoRings />
-          <span className="eyebrow">Privacy, not as an afterthought</span>
           <h2>Your day is nobody&apos;s business but yours.</h2>
           <p className="lede">
             Echo reads sensitive things — your messages, your calendar, your notifications. So it

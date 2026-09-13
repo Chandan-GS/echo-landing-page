@@ -1,16 +1,39 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 /**
- * The Echo "sound sprite" mascot — a pearlescent orb, used as a tasteful
- * animated hero accent (NOT the brand mark; the logo.png waveform is the brand).
- * Floats gently with a slow sonar-ripple. Animations disable under
- * prefers-reduced-motion via CSS. Palette matches the app's pearlescent green.
+ * The Echo "sound sprite" mascot — a pearlescent orb matching the app's
+ * EchoMascot. It loops seamlessly through the app's phases (idle → listening →
+ * thinking → speaking), crossfading its eyes, a thinking arc, and its glow so
+ * it reads as alive. All motion is disabled under prefers-reduced-motion.
  */
+const PHASES = ['idle', 'listening', 'thinking', 'speaking'] as const;
+type Phase = (typeof PHASES)[number];
+
 export default function Mascot({ className = 'hero-mascot float-orb' }: { className?: string }) {
+  const [phase, setPhase] = useState<Phase>('idle');
+
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    let i = 0;
+    const id = window.setInterval(() => {
+      i = (i + 1) % PHASES.length;
+      setPhase(PHASES[i]);
+    }, 2600);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const happy = phase === 'thinking' || phase === 'speaking';
+  const label = `Echo, the sound sprite — currently ${phase}`;
+
   return (
     <svg
       viewBox="0 0 240 240"
       role="img"
-      aria-label="Echo, the sound sprite — a glowing pearlescent orb that listens"
+      aria-label={label}
       className={className}
+      data-phase={phase}
     >
       <defs>
         {/* Pearlescent orb body — matches the app's EchoMascot exactly. */}
@@ -25,7 +48,6 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
           <stop offset="0%" stopColor="#D6EBDA" stopOpacity="0.85" />
           <stop offset="100%" stopColor="#D6EBDA" stopOpacity="0" />
         </radialGradient>
-        {/* soft green bottom shade for depth */}
         <radialGradient id="m-shade" cx="50%" cy="80%" r="55%">
           <stop offset="0%" stopColor="#5E8568" stopOpacity="0" />
           <stop offset="72%" stopColor="#5E8568" stopOpacity="0" />
@@ -40,13 +62,33 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
         </filter>
       </defs>
 
-      {/* soft green glow + faint sonar ripple rings (kept subtle so they melt
-          into the dark background rather than reading as loud "signals") */}
-      <circle cx="120" cy="122" r="100" fill="url(#m-glow)" filter="url(#m-soft)" />
-      <g fill="none" stroke="#8FE0A6" strokeWidth="1.6">
+      {/* soft green glow — brightens a touch while speaking */}
+      <circle
+        className="m-glow-c"
+        cx="120"
+        cy="122"
+        r="100"
+        fill="url(#m-glow)"
+        filter="url(#m-soft)"
+        opacity={phase === 'speaking' ? 1 : phase === 'listening' ? 0.85 : 0.7}
+      />
+
+      {/* faint sonar ripple rings — the whole set tightens/expands per phase */}
+      <g className="m-rings" fill="none" stroke="#8FE0A6" strokeWidth="1.6">
         <circle className="ring-a" cx="120" cy="120" r="72" opacity="0.22" />
         <circle className="ring-b" cx="120" cy="120" r="72" opacity="0.22" />
         <circle className="ring-c" cx="120" cy="120" r="72" opacity="0.22" />
+      </g>
+
+      {/* thinking arc — a short comet that orbits while Echo thinks */}
+      <g className="think-arc" style={{ opacity: phase === 'thinking' ? 0.7 : 0 }}>
+        <path
+          d="M120 50 A 70 70 0 0 1 190 120"
+          fill="none"
+          stroke="#8FE0A6"
+          strokeWidth="3.4"
+          strokeLinecap="round"
+        />
       </g>
 
       <g className="orb-core">
@@ -54,9 +96,25 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
         <circle cx="120" cy="120" r="60" fill="url(#m-shade)" />
         <ellipse cx="102" cy="98" rx="22" ry="14" fill="url(#m-spec)" transform="rotate(-24 102 98)" />
         <circle cx="99" cy="94" r="4.5" fill="#fff" opacity="0.9" />
-        {/* two-eye face */}
-        <ellipse cx="108" cy="122" rx="5" ry="8" fill="#222F27" />
-        <ellipse cx="132" cy="122" rx="5" ry="8" fill="#222F27" />
+
+        {/* eyes crossfade between open (idle/listening) and content (thinking/speaking) */}
+        <g className="m-eyes">
+          <g className="eyes-open" style={{ opacity: happy ? 0 : 1 }}>
+            <ellipse cx="108" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
+            <ellipse cx="132" cy="122" rx="5" ry={phase === 'listening' ? 9 : 8} fill="#222F27" />
+          </g>
+          <g
+            className="eyes-happy"
+            style={{ opacity: happy ? 1 : 0 }}
+            fill="none"
+            stroke="#222F27"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+          >
+            <path d="M101 124 Q108 116 115 124" />
+            <path d="M125 124 Q132 116 139 124" />
+          </g>
+        </g>
       </g>
     </svg>
   );

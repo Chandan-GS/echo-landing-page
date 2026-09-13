@@ -10,9 +10,6 @@ export default function Hero() {
 
       <div className="wrap hero-inner">
         <div className="hero-copy">
-          <Reveal as="span" className="eyebrow">
-            Your private morning briefing
-          </Reveal>
           <Reveal as="h1">
             Wake up <em>already caught up.</em>
           </Reveal>

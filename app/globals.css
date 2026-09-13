@@ -1316,6 +1316,41 @@
   animation: heroGlow 7s ease-in-out infinite;
 }
 
+/* Mascot phase loop — seamless crossfades between idle/listening/thinking/speaking */
+.m-eyes {
+  animation: blink 4.6s ease-in-out infinite;
+  transform-origin: 120px 122px;
+}
+.eyes-open,
+.eyes-happy {
+  transition: opacity 0.4s ease;
+}
+.m-glow-c {
+  transition: opacity 0.7s ease;
+}
+.m-rings {
+  transition: transform 0.6s ease;
+  transform-origin: 120px 120px;
+}
+svg[data-phase='listening'] .m-rings {
+  transform: scale(0.9);
+}
+svg[data-phase='speaking'] .m-rings {
+  transform: scale(1.08);
+}
+.think-arc {
+  transition: opacity 0.5s ease;
+  transform-origin: 120px 120px;
+  animation: arcSpin 2.6s linear infinite;
+}
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.12); }
+}
+@keyframes arcSpin {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes floatUp {
   0% { opacity: 0; transform: translateY(0); }
   10% { opacity: 1; }

@@ -5,7 +5,6 @@ export default function Features() {
     <section className="section" id="features">
       <div className="wrap">
         <FeatureRow
-          eyebrow="The morning briefing"
           title="Your whole day, spoken in two calm minutes."
           body="Echo's signature moment: a green audio waveform plays your briefing aloud while the transcript scrolls below, with the times and dates that matter highlighted. It's the one thing to hear before you've even unlocked your phone."
           points={[
@@ -21,7 +20,6 @@ export default function Features() {
 
         <FeatureRow
           reverse
-          eyebrow="Ask Echo"
           title="Ask a question. Get a real answer from your own day."
           body="Everything Echo captured is searchable in plain language. Ask “Do I have any meetings tonight?” or “Any messages from work I missed?” and Echo answers from your history — and shows exactly which notifications it used."
           points={[
@@ -36,7 +34,6 @@ export default function Features() {
         />
 
         <FeatureRow
-          eyebrow="The Vault"
           title="Every notification, kept and organized — on your phone."
           body="Nothing slips through. Echo logs each notification in a private, on-device Vault you can browse by app, category or time. Scrub the interactive ring to explore your day, and rename, block or clear any noisy source."
           points={[

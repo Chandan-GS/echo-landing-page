@@ -4,7 +4,6 @@ import Reveal from './Reveal';
 import { CheckIcon } from './icons';
 
 type FeatureRowProps = {
-  eyebrow: string;
   title: ReactNode;
   body: ReactNode;
   points: string[];
@@ -12,11 +11,10 @@ type FeatureRowProps = {
   reverse?: boolean;
 };
 
-export default function FeatureRow({ eyebrow, title, body, points, image, reverse }: FeatureRowProps) {
+export default function FeatureRow({ title, body, points, image, reverse }: FeatureRowProps) {
   return (
     <div className={`frow ${reverse ? 'reverse' : ''}`.trim()}>
       <Reveal className="frow-copy">
-        <span className="eyebrow">{eyebrow}</span>
         <h3>{title}</h3>
         <p>{body}</p>
         <ul className="frow-list">

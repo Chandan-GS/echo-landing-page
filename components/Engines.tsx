@@ -6,7 +6,6 @@ export default function Engines() {
     <section className="section" id="engine">
       <div className="wrap">
         <Reveal className="section-head center">
-          <span className="eyebrow">Your AI, your choice</span>
           <h2 className="section-h2">On-device by default. Cloud when you want speed.</h2>
           <p className="section-desc">
             Echo can think entirely on your phone, or hand off to Google Gemini for faster, richer

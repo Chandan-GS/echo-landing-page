@@ -140,7 +140,6 @@ export default function Voices() {
     <section className="section voices-section" id="voices">
       <div className="wrap">
       <Reveal className="section-head center">
-        <span className="eyebrow">Hear it aloud</span>
         <h2 className="section-h2">Pick a voice for your morning</h2>
         <p className="section-desc">
           Four personas across a range of English accents. Tap one to hear a sample briefing spoken
