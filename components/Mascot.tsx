@@ -40,12 +40,13 @@ export default function Mascot({ className = 'hero-mascot float-orb' }: { classN
         </filter>
       </defs>
 
-      {/* soft green glow + sonar ripple rings (app palette) */}
+      {/* soft green glow + faint sonar ripple rings (kept subtle so they melt
+          into the dark background rather than reading as loud "signals") */}
       <circle cx="120" cy="122" r="100" fill="url(#m-glow)" filter="url(#m-soft)" />
-      <g fill="none" stroke="#8FE0A6" strokeWidth="3">
-        <circle className="ring-a" cx="120" cy="120" r="72" opacity="0.6" />
-        <circle className="ring-b" cx="120" cy="120" r="72" opacity="0.6" />
-        <circle className="ring-c" cx="120" cy="120" r="72" opacity="0.6" />
+      <g fill="none" stroke="#8FE0A6" strokeWidth="1.6">
+        <circle className="ring-a" cx="120" cy="120" r="72" opacity="0.22" />
+        <circle className="ring-b" cx="120" cy="120" r="72" opacity="0.22" />
+        <circle className="ring-c" cx="120" cy="120" r="72" opacity="0.22" />
       </g>
 
       <g className="orb-core">

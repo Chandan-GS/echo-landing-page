@@ -175,7 +175,7 @@
   }
   .btn-green {
     background: var(--green-deep);
-    color: #fff;
+    color: var(--green-ink);
     box-shadow: 0 10px 28px rgba(73, 136, 79, 0.28);
   }
   .btn-green:hover {
@@ -441,7 +441,7 @@
     height: 54px;
     border-radius: 16px;
     background: var(--green-deep);
-    color: #fff;
+    color: var(--green-ink);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -560,11 +560,11 @@
   }
   .engine.solid {
     background: var(--green-deep);
-    color: #fff;
+    color: var(--green-ink);
     box-shadow: 0 24px 60px rgba(73, 136, 79, 0.24);
   }
   .engine.solid .engine-tag {
-    color: var(--green-hi);
+    color: rgba(22, 48, 27, 0.72);
   }
   .engine.outline {
     background: var(--surface);
@@ -575,8 +575,8 @@
     position: absolute;
     top: 22px;
     right: 24px;
-    background: rgba(255, 255, 255, 0.16);
-    color: #fff;
+    background: rgba(22, 48, 27, 0.16);
+    color: var(--green-ink);
     font-size: 0.66rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -594,8 +594,8 @@
     margin-bottom: 16px;
   }
   .engine.solid .engine-icon {
-    background: rgba(255, 255, 255, 0.16);
-    color: #fff;
+    background: rgba(22, 48, 27, 0.16);
+    color: var(--green-ink);
   }
   .engine.outline .engine-icon {
     background: rgba(110, 188, 118, 0.14);
@@ -618,7 +618,7 @@
     margin-bottom: 18px;
   }
   .engine.solid > p {
-    color: #dbeadd;
+    color: rgba(22, 48, 27, 0.78);
   }
   .engine.outline > p {
     color: var(--muted);
@@ -641,10 +641,10 @@
     height: 18px;
   }
   .engine.solid li {
-    color: #eaf3eb;
+    color: var(--green-ink);
   }
   .engine.solid li .material-icon {
-    color: var(--green-hi);
+    color: var(--green-ink);
   }
   .engine.outline li {
     color: #d0d0d0;
@@ -729,7 +729,7 @@
     display: block;
   }
   .voice-card.playing .voice-name {
-    color: #fff;
+    color: var(--green-ink);
   }
   .voice-desc {
     font-size: 0.85rem;
@@ -738,7 +738,7 @@
     margin-top: 3px;
   }
   .voice-card.playing .voice-desc {
-    color: #dbeadd;
+    color: rgba(22, 48, 27, 0.72);
   }
   .voice-status {
     font-size: 0.92rem;
@@ -765,7 +765,7 @@
     padding: 56px;
     position: relative;
     overflow: hidden;
-    color: #fff;
+    color: var(--green-ink);
   }
   .privacy-band .rings {
     position: absolute;
@@ -776,16 +776,16 @@
     pointer-events: none;
   }
   .privacy-band .eyebrow {
-    color: var(--green-hi);
+    color: rgba(22, 48, 27, 0.7);
   }
   .privacy-band h2 {
     font-size: clamp(1.9rem, 4vw, 2.7rem);
-    color: #fff;
+    color: var(--green-ink);
     margin: 12px 0 0;
     max-width: 18ch;
   }
   .privacy-band .lede {
-    color: #dbeadd;
+    color: rgba(22, 48, 27, 0.82);
     font-size: 1.08rem;
     line-height: 1.6;
     margin: 16px 0 0;
@@ -798,8 +798,8 @@
     gap: 16px;
   }
   .pcard {
-    background: rgba(255, 255, 255, 0.09);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(22, 48, 27, 0.1);
     border-radius: 20px;
     padding: 24px;
   }
@@ -807,20 +807,20 @@
     width: 42px;
     height: 42px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(22, 48, 27, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 14px;
-    color: #fff;
+    color: var(--green-ink);
   }
   .pcard h3 {
     font-size: 1.15rem;
-    color: #fff;
+    color: var(--green-ink);
   }
   .pcard p {
     font-size: 0.92rem;
-    color: #cfe0d1;
+    color: rgba(22, 48, 27, 0.72);
     margin-top: 6px;
     line-height: 1.55;
   }
@@ -1130,14 +1130,14 @@
     border-radius: 22px;
     padding: 28px 30px;
     margin: 40px 0;
-    color: #fff;
+    color: var(--green-ink);
   }
   .tldr h2 {
     font-size: 1.35rem;
     margin-bottom: 6px;
   }
   .tldr > p {
-    color: #cfe0d1;
+    color: rgba(22, 48, 27, 0.75);
     font-size: 0.95rem;
     margin-bottom: 16px;
   }
@@ -1152,7 +1152,7 @@
     gap: 10px;
     align-items: flex-start;
     font-size: 0.9rem;
-    color: #eaf3eb;
+    color: var(--green-ink);
     line-height: 1.5;
     font-weight: 600;
   }
@@ -1161,7 +1161,7 @@
     height: 18px;
     flex-shrink: 0;
     margin-top: 1px;
-    color: var(--green-hi);
+    color: var(--green-ink);
   }
   .toc {
     background: var(--surface);
@@ -1330,7 +1330,7 @@
   50% { transform: translateY(-9px); }
 }
 @keyframes ripple {
-  0% { transform: scale(0.72); opacity: 0.7; }
+  0% { transform: scale(0.78); opacity: 0.22; }
   100% { transform: scale(1.5); opacity: 0; }
 }
 @keyframes heroGlow {

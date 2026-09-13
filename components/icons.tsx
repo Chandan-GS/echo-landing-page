@@ -173,8 +173,8 @@ export function GooglePlayBadge({ className, height = 52 }: { className?: string
         <path d="M59.3 32.5 16.3 8.1c-2.9-1.7-5.5-1.5-7.1.2l43 43 7.1-7.1Z" fill="#00E676" />
       </g>
       {/* Text */}
-      <text x="150" y="70" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontSize="26" letterSpacing="1">GET IT ON</text>
-      <text x="148" y="140" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontSize="58" fontWeight="500">Google Play</text>
+      <text x="150" y="70" fill="#16301B" fontFamily="Arial, Helvetica, sans-serif" fontSize="26" letterSpacing="1">GET IT ON</text>
+      <text x="148" y="140" fill="#16301B" fontFamily="Arial, Helvetica, sans-serif" fontSize="58" fontWeight="500">Google Play</text>
     </svg>
   );
 }
