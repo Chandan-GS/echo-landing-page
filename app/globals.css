@@ -115,6 +115,7 @@
     height: 30px;
     width: auto;
     object-fit: contain;
+    border-radius: 22%;
   }
   .nav-logo {
     font-family: var(--font-display), serif;
@@ -274,6 +275,24 @@
     align-items: center;
     gap: 16px;
     flex-wrap: wrap;
+  }
+  .hero-desktop-cta {
+    margin-top: 14px;
+  }
+  .hero-desktop-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+  .hero-desktop-link:hover {
+    color: var(--green);
+  }
+  .hero-desktop-link .material-icon {
+    width: 16px;
+    height: 16px;
   }
   .hero-trust {
     margin-top: 26px;
@@ -546,6 +565,57 @@
     filter: blur(8px);
   }
 
+  /* ── MAC SHOWCASE ── */
+  /* These screenshots already carry the real macOS window chrome (traffic
+     lights, title bar) baked in, so the frame is just a glow + rounded
+     corners — no second fake browser chrome on top of the real one. */
+  .mac-device {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55);
+  }
+  .mac-device::after {
+    content: '';
+    position: absolute;
+    inset: -14% -10% -10%;
+    z-index: -1;
+    background: radial-gradient(60% 55% at 50% 40%, rgba(110, 188, 118, 0.24), transparent 70%);
+    filter: blur(10px);
+  }
+  .mac-device img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .mac-hero {
+    max-width: 920px;
+    margin: 44px auto 0;
+  }
+  .mac-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    max-width: 920px;
+    margin: 22px auto 0;
+  }
+  .mac-device.small {
+    border-radius: 12px;
+  }
+  .mac-cta {
+    margin-top: 38px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+  }
+  @media (max-width: 720px) {
+    .mac-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* ── AI ENGINE CHOICE ── */
   .engines {
     display: grid;
@@ -653,7 +723,6 @@
   .engine.outline li .material-icon {
     color: var(--green);
   }
-
   /* ── VOICES ── */
   .voices-section {
     text-align: center;
@@ -931,6 +1000,42 @@
     gap: 16px;
     flex-wrap: wrap;
   }
+  .final-desktop-row {
+    position: relative;
+    z-index: 2;
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .final-desktop-label {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .final-desktop-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--divider);
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .final-desktop-link:hover {
+    border-color: var(--green);
+    color: var(--green);
+    transform: translateY(-2px);
+  }
+  .final-desktop-link .material-icon {
+    width: 16px;
+    height: 16px;
+  }
 
   /* ── FOOTER ── */
   footer.site {
@@ -955,6 +1060,7 @@
   .footer-logo-img {
     height: 36px;
     width: auto;
+    border-radius: 22%;
   }
   .footer-logo-text {
     font-family: var(--font-display), serif;
@@ -1271,14 +1377,6 @@
     font-size: 0.92rem;
     color: var(--muted);
   }
-  .back-link {
-    font-size: 0.92rem;
-    color: var(--muted);
-    font-weight: 700;
-  }
-  .back-link:hover {
-    color: var(--green);
-  }
 }
 
 /* ── SCROLL FADE-IN ── */
@@ -1429,6 +1527,7 @@ svg[data-phase='speaking'] .m-face {
     margin-right: auto;
   }
   .hero-cta,
+  .hero-desktop-cta,
   .hero-trust {
     justify-content: center;
   }

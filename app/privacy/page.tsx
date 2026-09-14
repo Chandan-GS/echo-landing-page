@@ -53,11 +53,8 @@ export default function PrivacyPage() {
       <nav className="nav">
         <div className="nav-content">
           <Link href="/" className="nav-logo-container" aria-label="Echo home">
-            <Image src="/logo.png" alt="Echo logo" className="nav-logo-img" width={120} height={34} priority />
+            <Image src="/logo.png" alt="Echo logo" className="nav-logo-img" width={32} height={32} priority />
             <span className="nav-logo">Echo</span>
-          </Link>
-          <Link href="/" className="back-link">
-            ← Back to Echo
           </Link>
         </div>
       </nav>
@@ -360,7 +357,7 @@ export default function PrivacyPage() {
             reach out:
           </p>
           <p>
-            <strong>Email:</strong> <a href="mailto:privacy@echo.app">privacy@echo.app</a>
+            <strong>Email:</strong> <a href="mailto:chandan1204@gmail.com">chandan1204@gmail.com</a>
           </p>
           <p>We aim to respond to privacy inquiries promptly.</p>
         </section>
@@ -369,13 +366,13 @@ export default function PrivacyPage() {
       <footer className="site">
         <div className="footer-content">
           <Link href="/" className="footer-logo-container" aria-label="Echo home">
-            <Image src="/logo.png" alt="Echo logo" className="footer-logo-img" width={140} height={40} />
+            <Image src="/logo.png" alt="Echo logo" className="footer-logo-img" width={36} height={36} />
             <span className="footer-logo-text">Echo</span>
           </Link>
           <div className="footer-links">
             <Link href="/">Home</Link>
             <Link href="/privacy/">Privacy Policy</Link>
-            <a href="mailto:privacy@echo.app">Contact</a>
+            <a href="mailto:chandan1204@gmail.com">Contact</a>
           </div>
           <p className="footer-copy">© 2026 Echo. All rights reserved.</p>
         </div>

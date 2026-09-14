@@ -1,6 +1,6 @@
 import Reveal from './Reveal';
 import PlayBadge from './PlayBadge';
-import { CheckIcon } from './icons';
+import { CheckIcon, LaptopIcon } from './icons';
 
 export default function Hero() {
   return (
@@ -21,6 +21,12 @@ export default function Hero() {
             <PlayBadge height={54} />
             <a className="btn btn-ghost" href="#how">
               See how it works
+            </a>
+          </Reveal>
+
+          <Reveal className="hero-desktop-cta">
+            <a className="hero-desktop-link" href="#mac">
+              <LaptopIcon className="material-icon" /> Also available for Mac &amp; Windows
             </a>
           </Reveal>
 

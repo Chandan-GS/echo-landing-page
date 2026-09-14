@@ -4,6 +4,7 @@ import Problem from '@/components/Problem';
 import HowItWorks from '@/components/HowItWorks';
 import Features from '@/components/Features';
 import Engines from '@/components/Engines';
+import MacShowcase from '@/components/MacShowcase';
 import Voices from '@/components/Voices';
 import PrivacyBand from '@/components/PrivacyBand';
 import FAQ from '@/components/FAQ';
@@ -23,6 +24,7 @@ export default function Home() {
         <HowItWorks />
         <Features />
         <Engines />
+        <MacShowcase />
         <Voices />
         <PrivacyBand />
         <FAQ />

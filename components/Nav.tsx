@@ -7,7 +7,7 @@ export default function Nav() {
     <nav className="nav">
       <div className="nav-content">
         <Link href="/" className="nav-logo-container" aria-label="Echo home">
-          <Image src="/logo.png" alt="Echo logo" className="nav-logo-img" width={106} height={30} priority />
+          <Image src="/logo.png" alt="Echo logo" className="nav-logo-img" width={32} height={32} priority />
           <span className="nav-logo">Echo</span>
         </Link>
         <div className="nav-right">

@@ -1,6 +1,8 @@
 import Reveal from './Reveal';
 import PlayBadge from './PlayBadge';
 import DownloadButton from './DownloadButton';
+import { DownloadIcon } from './icons';
+import { DESKTOP_DOWNLOAD_URL } from './download';
 
 export default function FinalCTA() {
   return (
@@ -19,6 +21,15 @@ export default function FinalCTA() {
           <DownloadButton className="btn btn-ghost" ariaLabel="How to install Echo">
             How to install
           </DownloadButton>
+        </Reveal>
+        <Reveal className="final-desktop-row">
+          <span className="final-desktop-label">Also on your computer</span>
+          <a className="final-desktop-link" href={DESKTOP_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
+            <DownloadIcon className="material-icon" /> Mac
+          </a>
+          <a className="final-desktop-link" href={DESKTOP_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
+            <DownloadIcon className="material-icon" /> Windows
+          </a>
         </Reveal>
       </div>
     </section>
