@@ -1,25 +1,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import PlayBadge from './PlayBadge';
 
 export default function Nav() {
   return (
-    <nav className="nav">
-      <div className="nav-content">
-        <Link href="/" className="nav-logo-container" aria-label="Echo home">
-          <Image src="/logo.png" alt="Echo logo" className="nav-logo-img" width={32} height={32} priority />
-          <span className="nav-logo">Echo</span>
+    <header className="topbar">
+      <div className="wrap">
+        <Link href="/" className="brand" aria-label="Echo home">
+          <Image src="/logo.png" alt="" width={30} height={30} priority />
+          Echo
         </Link>
-        <div className="nav-right">
-          <div className="nav-links">
-            <a href="/#how">How it works</a>
-            <a href="/#voices">Voices</a>
-            <a href="/#privacy">Privacy</a>
-            <a href="/#faq">FAQ</a>
-          </div>
-          <PlayBadge height={40} />
-        </div>
+        <nav className="top-links" aria-label="Main">
+          <a href="#features">Features</a>
+          <a href="#desktop">Desktop</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#faq">FAQ</a>
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 }

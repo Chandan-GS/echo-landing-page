@@ -1,37 +1,40 @@
 import Nav from '@/components/Nav';
-import Hero from '@/components/Hero';
-import Problem from '@/components/Problem';
-import HowItWorks from '@/components/HowItWorks';
-import Features from '@/components/Features';
-import Engines from '@/components/Engines';
-import MacShowcase from '@/components/MacShowcase';
-import Voices from '@/components/Voices';
-import PrivacyBand from '@/components/PrivacyBand';
+import Hero from '@/components/home/Hero';
+import Film from '@/components/home/Film';
+import Briefing from '@/components/home/Briefing';
+import YourDay from '@/components/home/YourDay';
+import Ask from '@/components/home/Ask';
+import VaultRules from '@/components/home/VaultRules';
+import Desktop from '@/components/home/Desktop';
+import PrivacySettings from '@/components/home/PrivacySettings';
 import FAQ from '@/components/FAQ';
 import FinalCTA from '@/components/FinalCTA';
 import Footer from '@/components/Footer';
+import Dock from '@/components/home/Dock';
 import DownloadModal from '@/components/DownloadModal';
 import EchoGuide from '@/components/EchoGuide';
+import './home.css';
 
 export default function Home() {
   return (
-    <>
+    <div className="home">
       <EchoGuide />
       <Nav />
       <main>
         <Hero />
-        <Problem />
-        <HowItWorks />
-        <Features />
-        <Engines />
-        <MacShowcase />
-        <Voices />
-        <PrivacyBand />
+        <Film />
+        <Briefing />
+        <YourDay />
+        <Ask />
+        <VaultRules />
+        <Desktop />
+        <PrivacySettings />
         <FAQ />
         <FinalCTA />
       </main>
       <Footer />
+      <Dock />
       <DownloadModal />
-    </>
+    </div>
   );
 }

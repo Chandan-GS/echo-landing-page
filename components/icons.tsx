@@ -202,3 +202,51 @@ export function GooglePlayBadge({ className, height = 52 }: { className?: string
     </svg>
   );
 }
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M5 21a1 1 0 0 1-1-1v-9.6a2 2 0 0 1 .8-1.6l6-4.5a2 2 0 0 1 2.4 0l6 4.5a2 2 0 0 1 .8 1.6V20a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-5h-4v5a1 1 0 0 1-1 1H5Z" />
+    </svg>
+  );
+}
+
+export function SparkleIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9Zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5ZM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15Z" />
+    </svg>
+  );
+}
+
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M9.3 17.3a1 1 0 0 1 0-1.4l3.9-3.9-3.9-3.9a1 1 0 1 1 1.4-1.4l4.6 4.6a1 1 0 0 1 0 1.4l-4.6 4.6a1 1 0 0 1-1.4 0Z" />
+    </svg>
+  );
+}
+
+export function ArrowUpIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M11 19V8.4l-4.3 4.3a1 1 0 0 1-1.4-1.4l6-6a1 1 0 0 1 1.4 0l6 6a1 1 0 0 1-1.4 1.4L13 8.4V19a1 1 0 1 1-2 0Z" />
+    </svg>
+  );
+}
+
+export function BlockIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM4 12a8 8 0 0 1 12.9-6.3L5.7 16.9A7.9 7.9 0 0 1 4 12Zm8 8a7.9 7.9 0 0 1-4.9-1.7L18.3 7.1A8 8 0 0 1 12 20Z" />
+    </svg>
+  );
+}
+
+export function BarChartIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M6 20a1.5 1.5 0 0 1-1.5-1.5v-7a1.5 1.5 0 0 1 3 0v7A1.5 1.5 0 0 1 6 20Zm6 0a1.5 1.5 0 0 1-1.5-1.5v-13a1.5 1.5 0 0 1 3 0v13A1.5 1.5 0 0 1 12 20Zm6 0a1.5 1.5 0 0 1-1.5-1.5v-4a1.5 1.5 0 0 1 3 0v4A1.5 1.5 0 0 1 18 20Z" />
+    </svg>
+  );
+}

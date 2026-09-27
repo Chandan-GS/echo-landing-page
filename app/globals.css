@@ -4,12 +4,12 @@
 
 :root {
   --bg: #1a1a1a;
-  --surface: #232323;
+  --surface: #262626;
   --surface2: #2a2a2a;
   --divider: #333333;
   --text: #efefef;
   --muted: #a0a0a0;
-  --green: #6ebc76; /* bright accent */
+  --green: #5ca363; /* the app's dark-mode green */
   --green-deep: #49884f; /* solid filled cards/buttons */
   --green-ink: #16301b; /* text on green */
   --green-hi: #8fe0a6; /* waveform highlight */
