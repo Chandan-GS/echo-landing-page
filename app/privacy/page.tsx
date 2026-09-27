@@ -6,7 +6,7 @@ import { CheckIcon } from '@/components/icons';
 export const metadata: Metadata = {
   title: 'Privacy Policy — Echo',
   description:
-    'How Echo handles your data: notifications, SMS and calendar are processed on-device when you choose the offline engine, nothing is transmitted unless you enable the optional cloud engine. No ads, no third-party tracking.',
+    'How Echo handles your data: notifications, SMS and calendar are processed on-device when you choose the offline engine, nothing is transmitted unless you enable the optional cloud engine. No ads or advertising trackers.',
   alternates: { canonical: '/privacy/' },
   robots: { index: true, follow: true },
   openGraph: {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: 'Echo',
     title: 'Privacy Policy — Echo',
     description:
-      'Echo processes your notifications, SMS and calendar on-device when you choose the offline engine. Nothing leaves your phone unless you opt into the cloud engine. No ads, no third-party tracking.',
+      'Echo processes your notifications, SMS and calendar on-device when you choose the offline engine. Nothing leaves your phone unless you opt into the cloud engine. No ads or advertising trackers.',
     url: '/privacy/',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
@@ -25,7 +25,7 @@ const tldr = [
   'Your notifications, SMS and calendar are read to build your briefing.',
   'Choose the on-device engine and everything is processed on your phone.',
   'Nothing is sent off your phone unless you enable the optional cloud engine.',
-  'No ads, and no third-party analytics or advertising trackers.',
+  'No ads or advertising trackers — just optional, anonymous usage counts you can switch off.',
   'Your captured history lives in a local vault you can clear any time.',
   'Uninstalling Echo removes its data from your device.',
 ];
@@ -63,7 +63,7 @@ export default function PrivacyPage() {
         <div className="doc-hero">
           <div className="section-label">Legal</div>
           <h1>Privacy Policy</h1>
-          <p className="doc-dates">Effective date: 13 September 2026 · Last updated: 13 September 2026</p>
+          <p className="doc-dates">Effective date: 13 September 2026 · Last updated: 21 September 2026</p>
           <p className="doc-intro">
             Echo is a privacy-first personal briefing app. This policy explains, in plain language,
             what data Echo accesses, why it needs it, where that data is processed, and the control
@@ -263,15 +263,20 @@ export default function PrivacyPage() {
             third-party advertising networks.
           </p>
           <p>
-            Echo does not use third-party analytics or tracking SDKs to build a profile of you or to
-            follow you across other apps and websites. We do not sell or share your data with data
+            To understand which features are useful and where the app can improve, Echo collects{' '}
+            <strong>anonymous usage analytics</strong> through a privacy-focused provider (Aptabase).
+            This records only <strong>which features are used</strong> — for example, that a briefing
+            was generated or that Ask Echo was opened — as aggregate event counts. It is{' '}
+            <strong>not linked to your identity</strong>, requires no account, and{' '}
+            <strong>never includes your content</strong>: your notifications, messages, calendar,
+            briefings and questions are never sent to it. Echo does not use advertising trackers, does
+            not build a cross-app profile of you, and does not sell or share your data with data
             brokers.
           </p>
           <p>
-            If we ever introduce limited, privacy-respecting diagnostics to keep the app stable (for
-            example, anonymous crash reports), we will update this policy first, describe exactly what
-            is collected, and — where required — ask for your consent. As of the effective date
-            above, Echo does not include such tools.
+            This is <strong>on by default and fully optional</strong>. You can turn anonymous
+            analytics off at any time in <strong>Settings → Privacy</strong>, and no usage events are
+            sent once it is disabled.
           </p>
         </section>
 

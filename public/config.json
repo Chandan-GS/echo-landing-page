@@ -1,0 +1,4 @@
+{
+  "gemini_model": "gemini-3.6-flash",
+  "min_build": 5
+}
