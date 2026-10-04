@@ -1,112 +1,168 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import Reveal from '../Reveal';
-import { CheckIcon, ChevronRightIcon, ExpandIcon } from '../icons';
+import { AlarmIcon, CheckCircleIcon, NotificationsIcon, SparkleIcon } from '../icons';
+import { AskPill, ProgressRing, ReminderChip, TodoCheck } from './parts';
 
-// The same evening as the film and the recordings.
-const STOPS = [
-  { at: 8, when: '10:30 PM', title: 'Call Mom back', sub: 'In 29 min · Mom, WhatsApp', label: 'up' },
-  { at: 58, when: '11 AM', title: 'Design review', sub: 'Tomorrow · Google Meet', label: 'up' },
-  { at: 86, when: '8:30 PM', title: 'Dinner with Rohan at Toit', sub: 'Tomorrow · Rohan, WhatsApp', label: 'up' },
-  { at: 94, when: '10 PM', title: 'Pick Arjun up', sub: 'Tomorrow · Arjun, WhatsApp', label: 'down' },
-];
-
+// The film's to-do list: what people asked, who asked, and when Echo would remind you.
 const TODOS = [
-  { title: 'Call Mom back', when: '10:30 PM', who: 'Mom, WhatsApp' },
-  { title: 'Send Karan the Q3 deck', when: 'Anytime', who: 'Karan, Slack' },
-  { title: 'Send Kabir your share of the rent', when: 'Anytime', who: 'Flatmates, WhatsApp' },
+  { title: 'Sign off the release notes', when: '5 PM', who: 'Vikram, Slack', at: '4:40 PM' },
+  { title: 'Send Karan the deck', when: 'Anytime', who: 'Karan, Slack', at: '9:00 PM' },
+  { title: 'Tell Rohan if you’re in for Friday', when: 'Anytime', who: 'Rohan, WhatsApp', at: '9:30 PM' },
+  { title: 'Review Mahesh’s pull request', when: 'Anytime', who: 'Mahesh, GitHub', at: '6:00 PM' },
 ];
+/** Already ticked off this morning. */
+const EARLIER = 1;
+
+type Note = 'idle' | 'chat' | 'snoozed' | 'done';
+type Offer = 'open' | 'accepted' | 'dismissed';
 
 export default function YourDay() {
-  const [stop, setStop] = useState(0);
   const [done, setDone] = useState<number[]>([]);
+  const [leaving, setLeaving] = useState<number[]>([]);
   const [gone, setGone] = useState<number[]>([]);
-  const s = STOPS[stop];
-  const doneCount = 1 + done.length; // one was already done today
+  const [setAt, setSetAt] = useState<number[]>([]);
+  const [offer, setOffer] = useState<Offer>('open');
+  const [note, setNote] = useState<Note>('idle');
+  const left = TODOS.length - done.length;
+  const nextAt = TODOS.find((t, i) => !done.includes(i) && t.when !== 'Anytime')?.when;
 
   const tick = (i: number) => {
     if (done.includes(i)) return;
     setDone((d) => [...d, i]);
     window.dispatchEvent(new Event('echo:happy'));
-    // Like the app: the tick plays out, then the row folds away.
-    setTimeout(() => setGone((g) => [...g, i]), 700);
+    // As in the app: the tick plays out for 650 ms, then the row folds away.
+    setTimeout(() => setLeaving((g) => [...g, i]), 650);
+    setTimeout(() => setGone((g) => [...g, i]), 650 + 340);
   };
+  const toggleReminder = (i: number) => setSetAt((s) => (s.includes(i) ? s.filter((x) => x !== i) : [...s, i]));
 
   return (
     <section className="section">
       <div className="wrap">
         <Reveal className="split head-split">
           <div>
-            <p className="kicker">Then, your day</p>
-            <h2>Everything with a time. Everything to do.</h2>
+            <p className="kicker">Your list</p>
+            <h2>Your to-do list writes itself.</h2>
           </div>
           <p className="body">
-            Your next few hours sit on one line. One tap turns the briefing into a list of real tasks,
-            with who asked and when. Tick them off in the app, or from your home screen.
+            What people ask of you becomes a to-do, with who asked and where. Every to-do can remind
+            you, and the reminder opens the exact chat it came from.
           </p>
         </Reveal>
         <div className="pair">
           <Reveal className="pair-item">
-            <div className="card dayline">
-              <div className="dl-when">{s.when}</div>
-              <div className="dl-title">{s.title}</div>
-              <div className="dl-sub">{s.sub}</div>
-              <div className="dl-line">
-                <div className="dl-track" />
-                <div className="dl-now" />
-                <div className="dl-mid" style={{ left: '24%' }} />
-                <span className="dl-lab down" style={{ left: '24%' }}>Tomorrow</span>
-                {STOPS.map((x, i) => (
-                  <span key={x.when}>
-                    <span className={`dl-lab ${x.label}`} style={{ left: `${x.at}%` }}>{x.when}</span>
-                    <button className={`dl-stop ${i === stop ? 'on' : ''}`} style={{ left: `${x.at}%` }} onClick={() => setStop(i)} aria-label={x.title} />
-                  </span>
-                ))}
-              </div>
-              <div className="dl-list">
-                {STOPS.map((x, i) => (
-                  <button key={x.when} className={`dl-item ${i === stop ? 'on' : ''}`} onClick={() => setStop(i)}>
-                    <span className="when">{x.when}</span>
-                    <span className="what">{x.title}</span>
-                    <span className="day">{i === 0 ? 'Tonight' : 'Tomorrow'}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="cap"><b>Your day, as a line.</b><span>Everything with a time, until the end of tomorrow.</span></div>
-          </Reveal>
-          <Reveal className="pair-item">
-            <div className="card todo">
-              <div className="todo-head">
+            <div className="app-screen stagger">
+              {offer !== 'dismissed' && (
+                <div className="ask-card offer" style={{ '--i': 0 } as CSSProperties}>
+                  {offer === 'accepted' ? (
+                    <p className="swap">Done. I’ll remind you before each of them. Tap any bell to change one.</p>
+                  ) : (
+                    <>
+                      <p>
+                        Four of your to-dos name a time. Want me to remind you before each? I’ve marked my times with{' '}
+                        <SparkleIcon className="material-icon spark" />.
+                      </p>
+                      <div className="pill-row pill-wrap">
+                        <AskPill
+                          label="Remind me for all four"
+                          icon={NotificationsIcon}
+                          filled
+                          onClick={() => {
+                            setOffer('accepted');
+                            setSetAt(TODOS.map((_, i) => i));
+                          }}
+                        />
+                        <AskPill label="Not now" onClick={() => setOffer('dismissed')} />
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+              <div className="app-head big" style={{ '--i': 1 } as CSSProperties}>
                 <div>
                   <h4>Today</h4>
-                  <div className="left">{4 - doneCount} of 4 left</div>
+                  <span className="swap" key={left}>
+                    {left === 0 ? `All ${TODOS.length + EARLIER} done` : `${left} left${nextAt ? ` · next at ${nextAt}` : ''}`}
+                  </span>
                 </div>
-                <svg className="todo-ring" viewBox="0 0 46 46" aria-hidden="true">
-                  <circle cx="23" cy="23" r="19" fill="none" stroke="#333" strokeWidth="4" />
-                  <circle cx="23" cy="23" r="19" fill="none" stroke="#5CA363" strokeWidth="4" strokeLinecap="round" strokeDasharray="119.4" strokeDashoffset={119.4 * (1 - doneCount / 4)} transform="rotate(-90 23 23)" style={{ transition: 'stroke-dashoffset .5s ease' }} />
-                  <text x="23" y="28" textAnchor="middle">{doneCount}</text>
-                </svg>
+                <ProgressRing done={done.length + EARLIER} total={TODOS.length + EARLIER} />
               </div>
-              <div className="todo-rows">
-                {TODOS.map((t, i) => (
-                  <div key={t.title} className={`todo-row ${done.includes(i) ? 'done' : ''} ${gone.includes(i) ? 'gone' : ''}`}>
-                    <button className="tick" onClick={() => tick(i)} aria-label={`Mark "${t.title}" done`}>
-                      <CheckIcon className="material-icon" />
-                    </button>
-                    <div>
-                      <div className="todo-t">{t.title}</div>
-                      <div className="todo-m"><b>{t.when}</b> · {t.who}</div>
+              <div className="todo-list" style={{ '--i': 2 } as CSSProperties}>
+                {TODOS.map((t, i) =>
+                  gone.includes(i) ? null : (
+                    <div key={t.title} className={`todo-line ${done.includes(i) ? 'done' : ''} ${leaving.includes(i) ? 'leaving' : ''}`}>
+                      <div className="todo-in">
+                        <TodoCheck done={done.includes(i)} onClick={() => tick(i)} label={`Mark “${t.title}” done`} />
+                        <div className="todo-text">
+                          <div className="todo-t">{t.title}</div>
+                          <div className="todo-m"><b>{t.when}</b> · {t.who}</div>
+                        </div>
+                        {!done.includes(i) && <ReminderChip at={t.at} set={setAt.includes(i)} onClick={() => toggleReminder(i)} />}
+                      </div>
                     </div>
-                    <ExpandIcon className="material-icon todo-x" />
+                  )
+                )}
+                {gone.length === TODOS.length && (
+                  <div className="all-done swap">
+                    <CheckCircleIcon className="material-icon" />
+                    That’s everything for today
                   </div>
-                ))}
+                )}
               </div>
-              <div className="todo-foot"><span>See all 4 for today</span><ChevronRightIcon className="material-icon" /></div>
-              <div className="tomorrow"><b>Tomorrow</b> 5 things, starting with design review</div>
+              <div className="app-head" style={{ '--i': 3 } as CSSProperties}>
+                <div>
+                  <h4 className="small">Tomorrow</h4>
+                  <span>7 things, starting with the design review</span>
+                </div>
+              </div>
             </div>
-            <div className="cap"><b>Then, a to-do list.</b><span>Go on, tick one off.</span></div>
+            <div className="cap"><b>A reminder on every to-do.</b><span>Tick one off, or set them all.</span></div>
+          </Reveal>
+          <Reveal className="pair-item">
+            <div className="card reminder">
+              <div className="lock">
+                <div className="lock-time">9:00</div>
+                <div className="lock-date">Sunday, 4 October</div>
+                {note === 'chat' ? (
+                  <div className="chatview">
+                    <div className="ch-head">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/icons/Slack.png" alt="" width={24} height={24} />
+                      Karan
+                    </div>
+                    <div className="bub">Morning! Review is tomorrow at 11.</div>
+                    <div className="bub glow">Can you send me the deck before the review?</div>
+                    <div className="ch-input">Message Karan</div>
+                  </div>
+                ) : (
+                  <div className={`notif ${note}`}>
+                    <div className="n-head">
+                      <AlarmIcon className="material-icon" />
+                      Echo · now · reminder
+                    </div>
+                    <b>Send Karan the deck</b>
+                    <p>Karan: “Can you send me the deck before the review?”</p>
+                    {note === 'snoozed' ? (
+                      <div className="n-state">Snoozed until 9:10 PM</div>
+                    ) : note === 'done' ? (
+                      <div className="n-state">Ticked off your list</div>
+                    ) : (
+                      <div className="n-acts">
+                        <button onClick={() => setNote('chat')}>Open chat</button>
+                        <button onClick={() => setNote('snoozed')}>Snooze 10 min</button>
+                        <button onClick={() => setNote('done')}>Done</button>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {note !== 'idle' && (
+                  <button className="again" onClick={() => setNote('idle')}>Show the reminder again</button>
+                )}
+              </div>
+            </div>
+            <div className="cap"><b>Reminders that open the right chat.</b><span>Tap Open chat and see where it takes you.</span></div>
           </Reveal>
         </div>
       </div>

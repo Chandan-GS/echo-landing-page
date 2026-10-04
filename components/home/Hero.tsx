@@ -10,8 +10,9 @@ export default function Hero() {
           <p className="greet">Your phone never stops talking.</p>
           <h1>Echo tells you what matters.</h1>
           <p className="lede">
-            It reads your notifications, messages and calendar all day, then gives you one short
-            briefing, a to&#8209;do list, and answers when you ask. On your phone and your desktop.
+            It reads your notifications from WhatsApp, Slack, Teams, Gmail and the rest, then gives you
+            one short briefing, shows who’s waiting on you, and turns what people ask into to&#8209;dos
+            with reminders. On your phone and your desktop.
           </p>
           <FilmButton />
           <div className="hero-get">

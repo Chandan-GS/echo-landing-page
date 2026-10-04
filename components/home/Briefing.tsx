@@ -17,10 +17,10 @@ export default function Briefing() {
         <div className="card">
           <h4>Transcript</h4>
           <p className="transcript">
-            Good evening. Rohan has booked Toit for tomorrow at <b>8:30 PM</b>, on the terrace, so bring
-            something warm. Tomorrow the design review moves to <b>11 AM</b> on Google Meet, and Karan wants
-            the Q3 deck before then. Your mom says the electricity bill is due the same day. Arjun lands at{' '}
-            <b>10 PM</b> and asked if you can pick him up.
+            Good morning. Rohan is driving to Coorg on <b>Friday</b> and wants to know if you’re in. On
+            Slack, Karan needs the deck before tomorrow’s review, and Vikram wants your sign-off on the
+            release notes before <b>5</b>. Neha moved the demo to <b>tomorrow evening</b>, and Mahesh asked
+            for your review on GitHub. Priya landed safely, and the college group has the trip sorted.
           </p>
         </div>
       </Reveal>

@@ -8,11 +8,19 @@ const faqs = [
   },
   {
     q: 'Does my data leave my phone?',
-    a: 'Not by default. Your notifications, messages and calendar are processed on your devices and nothing is transmitted. Only if you turn on the cloud engine is the relevant text sent to Gemini to write your briefing.',
+    a: 'Never to us. By default your notifications and calendar are processed on your own devices. Text goes to Google Gemini only if you turn on the cloud engine with your own key, and to your desktop only if you pair one, directly over your Wi‑Fi.',
   },
   {
     q: 'How does Echo see my notifications?',
-    a: 'With your permission, Echo uses Android’s notification access. You choose which apps it hears, and you can revoke notification, SMS, calendar and microphone access any time in system settings.',
+    a: 'With your permission, Echo uses Android’s notification access. You choose which apps it hears, and you can revoke notification, calendar and microphone access any time in system settings.',
+  },
+  {
+    q: 'Which apps does Echo work with?',
+    a: 'Any app that shows notifications on your phone: WhatsApp, Slack, Teams, Gmail, Outlook, Calendar, GitHub, Jira, Notion, Telegram and more. You switch each one on or off in Apps Echo hears.',
+  },
+  {
+    q: 'Can Echo reply for me?',
+    a: 'Only when you say so. Echo suggests or drafts a reply, and nothing is sent until you tap Send. Replies go through the app’s own notification reply, from your account. Replies written on your desktop are sent by your phone.',
   },
   {
     q: 'Do I need an account?',

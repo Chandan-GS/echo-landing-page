@@ -8,7 +8,7 @@ export default function FilmButton() {
     <button className="play-card" onClick={() => window.dispatchEvent(new Event('echo:film'))}>
       <span>
         <span className="t">Watch the film</span>
-        <span className="s">84 seconds, sound on</span>
+        <span className="s">Two minutes, sound on</span>
       </span>
       <PlayIcon className="material-icon" />
     </button>

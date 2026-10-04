@@ -83,10 +83,11 @@ export default function EchoGuide() {
         size = small;
       }
 
-      // On phones there are no margins to rest in, so Echo stays in his two
-      // spots: he scrolls away with the hero, and is waiting at the ending.
+      // On phones there are no margins to rest in (and with reduced motion he
+      // shouldn't travel), so Echo stays in his two spots: he scrolls away with
+      // the hero, and is waiting at the ending.
       let opacity = 1;
-      if (vw < 760) {
+      if (reduce || vw < 760) {
         const spots = [heroAnchor, anchor].map((n) => n?.getBoundingClientRect());
         const seen = spots.find((r) => r && r.bottom > 0 && r.top < vh);
         if (seen) {

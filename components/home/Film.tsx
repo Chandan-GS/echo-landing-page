@@ -45,7 +45,7 @@ export default function Film() {
             </button>
           )}
         </div>
-        <p className="film-cap">Echo in 84 seconds, filmed on the real app.</p>
+        <p className="film-cap">Echo in two minutes, filmed on the real app.</p>
       </Reveal>
     </section>
   );

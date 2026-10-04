@@ -2,7 +2,9 @@ import Nav from '@/components/Nav';
 import Hero from '@/components/home/Hero';
 import Film from '@/components/home/Film';
 import Briefing from '@/components/home/Briefing';
+import NeedsYou from '@/components/home/NeedsYou';
 import YourDay from '@/components/home/YourDay';
+import YourWeek from '@/components/home/YourWeek';
 import Ask from '@/components/home/Ask';
 import VaultRules from '@/components/home/VaultRules';
 import Desktop from '@/components/home/Desktop';
@@ -24,9 +26,11 @@ export default function Home() {
         <Hero />
         <Film />
         <Briefing />
+        <NeedsYou />
         <YourDay />
         <Ask />
         <VaultRules />
+        <YourWeek />
         <Desktop />
         <PrivacySettings />
         <FAQ />
