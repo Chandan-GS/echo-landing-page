@@ -123,6 +123,8 @@
     font-weight: 700;
     color: var(--text);
     letter-spacing: -0.01em;
+    /* Old Standard TT sits high in its line box; centre its capitals on the icon. */
+    translate: 0 0.1em;
   }
   .nav-right {
     display: flex;
@@ -1066,6 +1068,7 @@
     font-family: var(--font-display), serif;
     font-size: 1.8rem;
     font-weight: 700;
+    translate: 0 0.1em;
   }
   .footer-links {
     display: flex;

@@ -7,7 +7,7 @@ export default function Nav() {
       <div className="wrap">
         <Link href="/" className="brand" aria-label="Echo home">
           <Image src="/logo.png" alt="" width={30} height={30} priority />
-          Echo
+          <span>Echo</span>
         </Link>
         <nav className="top-links" aria-label="Main">
           <a href="#features">Features</a>

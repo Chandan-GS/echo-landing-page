@@ -67,6 +67,11 @@
 .home .brand img {
   border-radius: 8px;
 }
+/* Old Standard TT sits high in its line box; this centres the wordmark's
+   capitals on the icon. */
+.home .brand span {
+  translate: 0 0.1em;
+}
 .home .top-links {
   display: flex;
   gap: 26px;
