@@ -4,15 +4,20 @@ import { useEffect, useRef, useState } from 'react';
 import Reveal from '../Reveal';
 import { PlayIcon } from '../icons';
 
-/** The launch film. Plays in place, from its own button or the hero's. */
+/** The launch film on YouTube (youtu.be/-OP1nj22nzs). */
+const YOUTUBE_ID = '-OP1nj22nzs';
+
+/**
+ * The launch film. The poster and play button are ours; YouTube's player
+ * (privacy-enhanced, no cookies until it plays) only loads once someone
+ * presses play, from its own button or the hero's.
+ */
 export default function Film() {
   const section = useRef<HTMLElement>(null);
-  const video = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
   const play = () => {
     setPlaying(true);
-    video.current?.play().catch(() => {});
     window.dispatchEvent(new Event('echo:happy'));
   };
 
@@ -29,20 +34,22 @@ export default function Film() {
     <section className="film" id="film" ref={section}>
       <Reveal className="wrap film-wrap">
         <div className="film-frame">
-          <video
-            ref={video}
-            src="/media/echo-film.mp4"
-            poster="/media/echo-film-poster.jpg"
-            preload="metadata"
-            playsInline
-            controls={playing}
-          />
-          {!playing && (
-            <button className="film-play" onClick={play} aria-label="Play the Echo film">
-              <span className="dot">
-                <PlayIcon className="material-icon" />
-              </span>
-            </button>
+          {playing ? (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}?autoplay=1&rel=0&playsinline=1`}
+              title="Meet Echo"
+              allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+            />
+          ) : (
+            <>
+              <img src="/media/echo-film-poster.jpg" alt="" />
+              <button className="film-play" onClick={play} aria-label="Play the Echo film">
+                <span className="dot">
+                  <PlayIcon className="material-icon" />
+                </span>
+              </button>
+            </>
           )}
         </div>
         <p className="film-cap">Echo in two minutes, filmed on the real app.</p>
