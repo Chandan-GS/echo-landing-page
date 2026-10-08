@@ -67,7 +67,7 @@ export default function PrivacyPage() {
         <div className="doc-hero">
           <div className="section-label">Legal</div>
           <h1>Privacy Policy</h1>
-          <p className="doc-dates">Effective date: 13 September 2026 · Last updated: 4 October 2026</p>
+          <p className="doc-dates">Effective date: 13 September 2026 · Last updated: 8 October 2026</p>
           <p className="doc-intro">
             Echo is a privacy-first personal briefing app for Android, with a companion app for Mac
             and Windows. This policy explains, in plain language, what data Echo accesses, why it
@@ -296,10 +296,6 @@ export default function PrivacyPage() {
               <p>{p}</p>
             </div>
           ))}
-          <p>
-            Android may also list a few permissions added automatically by a component Echo uses for
-            on-device AI (phone state and shared storage). Echo itself never uses them.
-          </p>
         </section>
 
         <section className="doc" id="storage">
