@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: 'Which platforms is Echo on?',
-    a: 'Android, from Google Play, plus a desktop app for Mac and Windows. On the same Wi‑Fi, your phone shares your day with your desktop automatically.',
+    a: 'Android, from Google Play. A desktop app for Mac and Windows is coming soon: on the same Wi‑Fi, your phone will share your day with your desktop automatically.',
   },
 ];
 

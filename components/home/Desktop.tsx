@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Reveal from '../Reveal';
 import { AppleIcon, WindowsIcon } from '../icons';
-import { MAC_DOWNLOAD_URL, WINDOWS_DOWNLOAD_URL } from '../download';
+import ComingSoon from '../ComingSoon';
 
 // Stills from the film's desktop recordings (2880×1800).
 const ROWS = [
@@ -67,8 +67,8 @@ export default function Desktop() {
           </div>
         ))}
         <Reveal className="desk-cta">
-          <a className="pill" href={MAC_DOWNLOAD_URL}><AppleIcon className="material-icon" />Download for Mac</a>
-          <a className="pill" href={WINDOWS_DOWNLOAD_URL}><WindowsIcon className="material-icon" />Download for Windows</a>
+          <ComingSoon className="pill" soon="Mac app coming soon"><AppleIcon className="material-icon" />Download for Mac</ComingSoon>
+          <ComingSoon className="pill" soon="Windows app coming soon"><WindowsIcon className="material-icon" />Download for Windows</ComingSoon>
         </Reveal>
       </div>
     </section>

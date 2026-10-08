@@ -12,7 +12,8 @@ const RELEASES_BASE = 'https://github.com/Chandan-GS/Echo/releases';
 // Android APK, built by the "Build Android APK" job in build-and-release.yml.
 export const DOWNLOAD_URL = `${RELEASES_BASE}/latest/download/Echo-1.0.0.apk`;
 
-// macOS .dmg (built/uploaded separately from CI).
+// macOS .dmg (built/uploaded separately from CI). Not linked yet: the site
+// says the desktop apps are coming soon (components/ComingSoon.tsx).
 export const MAC_DOWNLOAD_URL = `${RELEASES_BASE}/latest/download/Echo-1.0.0-macos.dmg`;
 
 // Windows build, zipped by the "Build Windows App" job in build-and-release.yml.

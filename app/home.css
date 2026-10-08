@@ -890,7 +890,8 @@
   color: var(--text2);
   font-size: 15px;
 }
-.home .end-desk a {
+.home .end-desk a,
+.home .end-soon {
   color: var(--text);
   font-weight: 800;
 }

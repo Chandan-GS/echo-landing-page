@@ -18,7 +18,7 @@ export default function Hero() {
           <div className="hero-get">
             <PlayBadge height={54} />
             <a className="textlink" href="#desktop">
-              <LaptopIcon className="material-icon" /> Also for Mac and Windows
+              <LaptopIcon className="material-icon" /> Mac and Windows coming soon
             </a>
           </div>
           <p className="trust">Free. No account. Private by default.</p>

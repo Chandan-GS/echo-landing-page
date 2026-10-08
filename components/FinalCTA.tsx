@@ -1,7 +1,7 @@
 import Reveal from './Reveal';
 import PlayBadge from './PlayBadge';
 import DownloadButton from './DownloadButton';
-import { MAC_DOWNLOAD_URL, WINDOWS_DOWNLOAD_URL } from './download';
+import ComingSoon from './ComingSoon';
 
 /** The page ends like the film: Echo, the name, one line, and how to get it. */
 export default function FinalCTA() {
@@ -22,8 +22,8 @@ export default function FinalCTA() {
         </Reveal>
         <Reveal className="end-desk">
           On your computer too:
-          <a href={MAC_DOWNLOAD_URL}>Mac</a>
-          <a href={WINDOWS_DOWNLOAD_URL}>Windows</a>
+          <ComingSoon className="end-soon" soon="Mac: coming soon">Mac</ComingSoon>
+          <ComingSoon className="end-soon" soon="Windows: coming soon">Windows</ComingSoon>
           <DownloadButton className="end-install" ariaLabel="How to install Echo">How to install</DownloadButton>
         </Reveal>
       </div>
