@@ -1,5 +1,5 @@
-// Google Play store link — PLACEHOLDER. Swap for the real store URL at launch.
-export const PLAY_STORE_URL = '#';
+// Echo on Google Play.
+export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.chandangs.echo';
 
 // All three below use GitHub's evergreen "latest release" asset URL:
 // https://github.com/<owner>/<repo>/releases/latest/download/<asset-name>

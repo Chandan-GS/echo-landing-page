@@ -2,8 +2,8 @@ import { PLAY_STORE_URL } from './download';
 
 /**
  * Google's official "Get it on Google Play" badge, used as supplied
- * (play.google.com/intl/en_us/badges). The link is a `#` placeholder
- * (PLAY_STORE_URL) until the store listing is live.
+ * (play.google.com/intl/en_us/badges), linking to Echo's store listing
+ * (PLAY_STORE_URL).
  */
 export default function PlayBadge({ height = 52, className }: { height?: number; className?: string }) {
   return (
